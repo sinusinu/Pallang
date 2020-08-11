@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#ffa726</color>
+
+    <color name="colorWidgetTextLight">#202020</color>
+    <color name="colorWidgetBackgroundLight">#efefef</color>
+    <color name="colorWidgetTextDark">#efefef</color>
+    <color name="colorWidgetBackgroundDark">#202020</color>
+
+    <color name="colorText">#202020</color>
+    <color name="colorPrevBackground">#d8d8d8</color>
+</resources>

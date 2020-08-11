@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">팔랑</string>
+
+    <string name="main_title">팔랑</string>
+    <string name="main_no_notes">＋ 버튼을 누르면 새 메모를 작성할 수 있습니다.</string>
+    <string name="main_new_note">새 메모 작성</string>
+    <string name="main_new_note_title">새로운 메모</string>
+    <string name="main_select_title">%d개 선택됨</string>
+    <string name="main_sort_last_mod_time">마지막으로 수정한 시간</string>
+    <string name="main_sort_create_time">만든 시간</string>
+    <string name="main_sort_title">이름</string>
+    <string name="main_sort_asc">오름차순</string>
+    <string name="main_sort_desc">내림차순</string>
+    <string name="main_menu_settings">설정</string>
+    <string name="main_menu_delete">삭제</string>
+    <string name="main_menu_sort">정렬</string>
+    <string name="main_menu_pin">맨 위에 고정</string>
+    <string name="main_menu_unpin">고정 해제</string>
+    <string name="main_delete_confirm">선택한 메모를 모두 삭제할까요?</string>
+    <string name="main_deleted">메모가 삭제되었습니다</string>
+    <string name="main_pinned">선택한 메모를 맨 위에 고정했습니다</string>
+    <string name="main_unpinned">선택한 메모를 고정 해제했습니다</string>
+
+    <string name="note_hint">내용을 입력하세요…</string>
+    <string name="note_last_mod">마지막 수정: %s</string>
+    <string name="note_saved">메모가 저장되었습니다</string>
+    <string name="note_delete_confirm">이 메모를 삭제할까요?</string>
+    <string name="note_deleted">삭제되었습니다</string>
+    <string name="note_menu_enter_edit">편집</string>
+    <string name="note_menu_save">저장</string>
+    <string name="note_menu_delete">삭제</string>
+    <string name="note_menu_props">속성</string>
+    <string name="note_menu_share">공유</string>
+    <string name="note_menu_style">스타일</string>
+    <string name="note_menu_style_title">스타일 변경</string>
+    <string name="note_menu_style_sansserif">고딕체</string>
+    <string name="note_menu_style_serif">세리프체</string>
+    <string name="note_menu_style_monospace">고정폭</string>
+    <string name="note_share_desc">공유 방식</string>
+    <string name="note_share_text_title">텍스트로 공유</string>
+    <string name="note_share_text_desc">메모 내용을 텍스트로 공유합니다.\n카톡, SNS 등으로 공유하는 데 적합합니다.</string>
+    <string name="note_share_file_title">파일로 공유</string>
+    <string name="note_share_file_desc">메모를 파일로 공유합니다.\n클라우드에 업로드하는 데 적합합니다.</string>
+    <string name="note_share_file_perm">파일로 공유하려면 권한이 필요합니다</string>
+    <string name="note_error_invalid_id">잘못된 호출입니다</string>
+    <string name="note_error_note_not_found">메모를 찾을 수 없습니다</string>
+    <string name="note_error_title_empty">메모 이름은 비워둘 수 없습니다!</string>
+    <string name="note_error_share_file_fail">파일로 공유에 실패했습니다</string>
+
+    <string name="prop_title">이름</string>
+    <string name="prop_props_pinned">맨 위에 고정</string>
+    <string name="prop_info">정보</string>
+    <string name="prop_len">길이</string>
+    <string name="prop_len_format">%d 글자</string>
+    <string name="prop_creation">생성한 날짜</string>
+    <string name="prop_last_mod">마지막으로 수정한 날짜</string>
+    <string name="prop_create_note">만들기</string>
+    <string name="prop_save_changes">저장</string>
+    <string name="prop_updated">정보가 갱신되었습니다</string>
+
+    <string name="settings_title">설정</string>
+    <string name="settings_category_general">일반</string>
+    <string name="settings_theme">테마</string>
+    <string name="settings_theme_desc">앱의 테마를 설정합니다.</string>
+    <string name="settings_theme_auto">기본값</string>
+    <string name="settings_theme_light">라이트</string>
+    <string name="settings_theme_dark">다크</string>
+    <string name="settings_text_size">글자 크기</string>
+    <string name="settings_text_size_desc">메모를 표시할 글자의 크기를 설정합니다.</string>
+    <string name="settings_text_size_small">작게</string>
+    <string name="settings_text_size_medium">보통</string>
+    <string name="settings_text_size_large">크게</string>
+    <string name="settings_category_troubleshoot">문제 해결</string>
+    <string name="settings_share_file_lf_type">파일 공유 시 줄바꿈 형식</string>
+    <string name="settings_share_file_lf_type_desc">메모를 파일로 공유할 때 사용할 줄바꿈 형식을 설정합니다.</string>
+    <string name="settings_share_file_lf_type_windows">Windows (CRLF) (추천)</string>
+    <string name="settings_share_file_lf_type_unix">Unix (LF)</string>
+    <string name="settings_category_about">정보</string>
+    <string name="settings_about">팔랑 %s</string>
+
+    <string name="share_done">공유된 텍스트를 메모로 저장하였습니다</string>
+    <string name="share_error">오류가 발생했습니다</string>
+
+    <string name="open_title_text">공유된 텍스트</string>
+    <string name="open_desc">이 %s 어떻게 할까요?</string>
+    <string name="open_desc_text">텍스트를</string>
+    <string name="open_desc_file">파일을</string>
+    <string name="open_as_new_note">새 메모로 저장하기</string>
+    <string name="open_update_existing">기존 메모의 내용을 지우고 덮어쓰기</string>
+    <string name="open_preview">미리 보기</string>
+    <string name="open_open">열기</string>
+    <string name="open_skip_this_file">이 파일 건너뛰기</string>
+    <string name="open_multiple_finished">완료했습니다</string>
+    <string name="open_error_invalid_call">잘못된 호출입니다</string>
+    <string name="open_error_file_read_error">파일을 열 수 없습니다</string>
+
+    <string name="widget_button">메모 바로가기</string>
+    <string name="widget_preview">메모 미리보기</string>
+
+    <string name="widget_button_conf_title">메모 선택</string>
+
+    <string name="widget_note_not_found">메모 삭제됨</string>
+
+    <string name="widget_error_note_not_found">위젯에 등록할 메모가 없습니다!</string>
+
+    <string name="menu_more">더 보기</string>
+
+    <string name="ok">확인</string>
+    <string name="cancel">취소</string>
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
+</resources>

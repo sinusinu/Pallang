@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnuMainSelectPin"
+        android:icon="@drawable/ic_pin_24_ctrlcolor"
+        android:title="@string/main_menu_delete"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mnuMainSelectDelete"
+        android:icon="@drawable/ic_delete_24_ctrlcolor"
+        android:title="@string/main_menu_delete"
+        app:showAsAction="ifRoom" />
+</menu>

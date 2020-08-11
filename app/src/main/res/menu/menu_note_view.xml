@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnuNoteViewEdit"
+        android:icon="@drawable/ic_edit_24_ctrlcolor"
+        android:title="@string/note_menu_enter_edit"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mnuNoteViewMore"
+        android:icon="@drawable/ic_overflow_24_ctrlcolor"
+        android:title="@string/menu_more"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/mnuNoteEditProps"
+                android:icon="@drawable/ic_info_24_ctrlcolor"
+                android:title="@string/note_menu_props"
+                app:showAsAction="always|withText" />
+            <item
+                android:id="@+id/mnuNoteViewShare"
+                android:icon="@drawable/ic_share_24_ctrlcolor"
+                android:title="@string/note_menu_share"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/mnuNoteViewDelete"
+                android:icon="@drawable/ic_delete_24_ctrlcolor"
+                android:title="@string/note_menu_delete"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+</menu>

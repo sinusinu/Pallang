@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/settings_category_general">
+
+    </PreferenceCategory>
+    <ListPreference
+        android:key="theme"
+        android:defaultValue="auto"
+        android:entries="@array/pref_theme_labels"
+        android:entryValues="@array/pref_theme_values"
+        android:summary="@string/settings_theme_desc"
+        android:title="@string/settings_theme" />
+    <ListPreference
+        android:key="text_size"
+        android:defaultValue="medium"
+        android:entries="@array/pref_text_size_labels"
+        android:entryValues="@array/pref_text_size_values"
+        android:summary="@string/settings_text_size_desc"
+        android:title="@string/settings_text_size" />
+    <PreferenceCategory android:title="@string/settings_category_troubleshoot">
+
+    </PreferenceCategory>
+    <ListPreference
+        android:key="lf_type"
+        android:defaultValue="windows"
+        android:entries="@array/pref_lf_type_labels"
+        android:entryValues="@array/pref_lf_type_values"
+        android:summary="@string/settings_share_file_lf_type_desc"
+        android:title="@string/settings_share_file_lf_type" />
+    <PreferenceCategory android:title="@string/settings_category_about">
+
+    </PreferenceCategory>
+    <Preference
+        android:key="about"
+        android:title="@string/settings_about"
+        android:summary="@string/settings_about_desc"
+        />
+</PreferenceScreen>
