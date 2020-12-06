@@ -87,4 +87,7 @@ lint/tmp/
 # Android Profiling
 *.hprof
 
+# .idea Directory
+.idea/
+
 things/
