@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory android:title="@string/settings_category_general">
+    <PreferenceCategory android:title="@string/settings_category_general"/>
 
-    </PreferenceCategory>
     <ListPreference
         android:key="theme"
         android:defaultValue="auto"
@@ -18,9 +17,14 @@
         android:entryValues="@array/pref_text_size_values"
         android:summary="@string/settings_text_size_desc"
         android:title="@string/settings_text_size" />
-    <PreferenceCategory android:title="@string/settings_category_troubleshoot">
+    <CheckBoxPreference
+        android:key="enable_file_share"
+        android:defaultValue="false"
+        android:title="@string/settings_share_file_share"
+        android:summary="@string/settings_share_file_share_desc" />
 
-    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_category_troubleshoot"/>
+
     <ListPreference
         android:key="lf_type"
         android:defaultValue="windows"
@@ -28,9 +32,9 @@
         android:entryValues="@array/pref_lf_type_values"
         android:summary="@string/settings_share_file_lf_type_desc"
         android:title="@string/settings_share_file_lf_type" />
-    <PreferenceCategory android:title="@string/settings_category_about">
 
-    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_category_about"/>
+
     <Preference
         android:key="about"
         android:title="@string/settings_about"

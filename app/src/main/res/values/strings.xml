@@ -70,6 +70,8 @@
     <string name="settings_text_size_small">Small</string>
     <string name="settings_text_size_medium">Medium</string>
     <string name="settings_text_size_large">Large</string>
+    <string name="settings_share_file_share">Enable sharing as a file</string>
+    <string name="settings_share_file_share_desc">Add option to share notes as a file.</string>
     <string name="settings_category_troubleshoot">Troubleshooting</string>
     <string name="settings_share_file_lf_type">Newline type</string>
     <string name="settings_share_file_lf_type_desc">Select which newline type to use when sharing note as a file.</string>

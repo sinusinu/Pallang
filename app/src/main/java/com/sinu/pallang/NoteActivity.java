@@ -187,13 +187,7 @@ public class NoteActivity extends AppCompatActivity {
 
         viewShare = getLayoutInflater().inflate(R.layout.dialog_share, null);
         viewShare.findViewById(R.id.llShareAsText).setOnClickListener((view) -> {
-            adShare.dismiss();
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, note.noteBody);
-            sendIntent.setType("text/plain");
-            Intent shareIntent = Intent.createChooser(sendIntent, null);
-            startActivity(shareIntent);
+            shareAsText();
         });
         viewShare.findViewById(R.id.llShareAsFile).setOnClickListener((view) -> {
             adShare.dismiss();
@@ -270,6 +264,17 @@ public class NoteActivity extends AppCompatActivity {
                            + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
         binding.tvwNoteDateDataDisp.setText(getString(R.string.note_last_mod, lastModTimeFormat));
         */
+    }
+
+    // code detached from llShareAsText's click listener
+    private void shareAsText() {
+        if (adShare.isShowing()) adShare.dismiss();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, note.noteBody);
+        sendIntent.setType("text/plain");
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
     }
 
     @Override
@@ -368,7 +373,11 @@ public class NoteActivity extends AppCompatActivity {
                 adStyle.show();
                 break;
             case R.id.mnuNoteViewShare:
-                adShare.show();
+                if (sp.getBoolean("enable_file_share", false)) {
+                    adShare.show();
+                } else {
+                    shareAsText();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
