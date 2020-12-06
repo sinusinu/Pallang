@@ -283,8 +283,7 @@ public class NoteActivity extends AppCompatActivity {
         new Thread(() -> {
             note = db.noteDao().getNote(noteId);
             runOnUiThread(() -> {
-                ab.setTitle(note.noteHead);
-                if (openInEditMode) ab.setTitle("*" + ab.getTitle());
+                ab.setTitle((isChangeMade ? "*" : "") + note.noteHead);
                 binding.edtNoteBody.setText(note.noteBody);
                 String lastModTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.lastModTime))
                         + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
@@ -413,7 +412,7 @@ public class NoteActivity extends AppCompatActivity {
     private void setNoteStyle(int which) {
         if (which < 0 || which > 2) return;
         if (note.noteStyle != which) {
-            if (!isChangeMade) ab.setTitle("*" + ab.getTitle());
+            ab.setTitle("*" + note.noteHead);
             isChangeMade = true;
         }
         note.noteStyle = which;
