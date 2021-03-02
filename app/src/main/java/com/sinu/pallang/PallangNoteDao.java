@@ -63,7 +63,7 @@ public interface PallangNoteDao {
     @Query("SELECT count(*) FROM notes")
     int getNoteCount();
 
-    @Query("SELECT note_id FROM notes ORDER BY note_id DESC LIMIT 1")
+    @Query("SELECT MAX(note_id) FROM notes")
     int getLastNoteId();
 
     @Insert
