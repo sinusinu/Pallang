@@ -101,10 +101,9 @@
     <string name="widget_preview">메모 미리보기</string>
 
     <string name="widget_button_conf_title">메모 선택</string>
-
     <string name="widget_note_not_found">메모 삭제됨</string>
-
     <string name="widget_error_note_not_found">위젯에 등록할 메모가 없습니다!</string>
+    <string name="widget_button_acc">메모 바꾸기</string>
 
     <string name="menu_more">더 보기</string>
 

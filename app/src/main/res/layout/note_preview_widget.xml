@@ -33,7 +33,8 @@
             android:layout_weight="0"
             android:background="@null"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_list_24_ctrlcolor" />
+            android:src="@drawable/ic_list_24_ctrlcolor"
+            android:contentDescription="@string/widget_button_acc" />
 
     </LinearLayout>
 
