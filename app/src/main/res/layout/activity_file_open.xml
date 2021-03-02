@@ -59,14 +59,14 @@
         <RadioButton
             android:id="@+id/rdoFileNewNote"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:checked="true"
             android:text="@string/open_as_new_note" />
 
         <RadioButton
             android:id="@+id/rdoFileOverwrite"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="@string/open_update_existing" />
     </RadioGroup>
 

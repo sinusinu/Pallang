@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
+        android:minHeight="48dp"
         android:maxLines="1" />
 
     <Space
@@ -29,7 +30,7 @@
     <CheckBox
         android:id="@+id/cbxPropsPinned"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="@string/prop_props_pinned" />
 
     <Space
