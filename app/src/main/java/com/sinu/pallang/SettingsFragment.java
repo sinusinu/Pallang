@@ -22,15 +22,34 @@
 
 package com.sinu.pallang;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.prefs, rootKey);
         getPreferenceScreen().findPreference("about").setTitle(getString(R.string.settings_about, BuildConfig.VERSION_NAME));
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("theme")) {
+            ((SettingsActivity)getActivity()).updateTheme();
+        }
     }
 }

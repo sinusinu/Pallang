@@ -378,17 +378,19 @@ public class MainActivity extends AppCompatActivity {
         return ret;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQ_SETTINGS) setThemeByPref();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void setThemeByPref() {
         String newTheme = sp.getString("theme", "auto");
-        if (newTheme.equals("auto")) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        else if (newTheme.equals("light")) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        else if (newTheme.equals("dark")) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        switch (newTheme) {
+            case "auto":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+        }
     }
 
     @Override

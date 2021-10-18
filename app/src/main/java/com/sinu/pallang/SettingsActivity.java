@@ -25,6 +25,8 @@ package com.sinu.pallang;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,7 +37,6 @@ import com.sinu.pallang.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
     ActivitySettingsBinding binding;
-    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,22 @@ public class SettingsActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.flSettings, new SettingsFragment())
                 .commit();
+    }
+
+    protected void updateTheme() {
+        String newTheme = PreferenceManager.getDefaultSharedPreferences(this).getString("theme", "auto");
+        switch (newTheme) {
+            case "auto":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+        }
+        recreate();
     }
 
     @Override
