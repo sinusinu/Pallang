@@ -28,7 +28,9 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.util.Log;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.TypefaceSpan;
 import android.widget.RemoteViews;
 
 import androidx.preference.PreferenceManager;
@@ -50,7 +52,10 @@ public class NotePreviewWidget extends AppWidgetProvider {
             PendingIntent piOpenNote = PendingIntent.getActivity(context, appWidgetId, openNote, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.llNpwWidget, piOpenNote);
             views.setTextViewText(R.id.tvwNpwHead, note.noteHead);
-            views.setTextViewText(R.id.tvwNpwBody, note.noteBody);
+            SpannableString spanBody = new SpannableString(note.noteBody);
+            String noteTypeface = note.noteStyle == 0 ? "sans-serif" : "serif";
+            spanBody.setSpan(new TypefaceSpan(noteTypeface), 0, note.noteBody.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            views.setTextViewText(R.id.tvwNpwBody, spanBody);
         }
         Intent changeNote = new Intent(context, NotePreviewWidgetConfigureActivity.class);
         changeNote.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
