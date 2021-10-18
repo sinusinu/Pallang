@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.preference.PreferenceManager;
 
@@ -164,8 +165,7 @@ public class NoteActivity extends AppCompatActivity {
         AlertDialog.Builder abStyle = new AlertDialog.Builder(this);
         abStyle.setTitle(R.string.note_menu_style_title);
         abStyle.setItems(new CharSequence[]{ getString(R.string.note_menu_style_sansserif),
-                                             getString(R.string.note_menu_style_serif),
-                                             getString(R.string.note_menu_style_monospace) },
+                                             getString(R.string.note_menu_style_serif) },
                          (dialog, which) -> setNoteStyle(which)
         );
         adStyle = abStyle.create();
@@ -410,7 +410,7 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void setNoteStyle(int which) {
-        if (which < 0 || which > 2) return;
+        if (which < 0 || which > 1) return;
         if (note.noteStyle != which) {
             ab.setTitle("*" + note.noteHead);
             isChangeMade = true;
@@ -422,13 +422,11 @@ public class NoteActivity extends AppCompatActivity {
     private void updateNoteStyle() {
         switch (note.noteStyle) {
             case 0:
+            case 2:
                 binding.edtNoteBody.setTypeface(Typeface.SANS_SERIF);
                 break;
             case 1:
                 binding.edtNoteBody.setTypeface(Typeface.SERIF);
-                break;
-            case 2:
-                binding.edtNoteBody.setTypeface(Typeface.MONOSPACE);
                 break;
         }
     }
