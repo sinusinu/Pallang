@@ -467,7 +467,7 @@ public class NoteActivity extends AppCompatActivity {
         if (isInEditMode) {
             if (shouldCheckNewNoteImmediateClose) {
                 if (binding.edtNoteBody.getText().length() == 0) {
-                    finish();
+                    if (closeAfter) finish();
                     return;
                 }
                 shouldCheckNewNoteImmediateClose = false;
