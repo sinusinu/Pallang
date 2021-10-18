@@ -85,6 +85,7 @@ public class NoteActivity extends AppCompatActivity {
     AlertDialog adStyle;
     AlertDialog adDelete;
     AlertDialog adShare;
+    AlertDialog adDiscard;
     View viewProps;
     View viewShare;
 
@@ -235,6 +236,26 @@ public class NoteActivity extends AppCompatActivity {
         abShare.setView(viewShare);
         adShare = abShare.create();
 
+        AlertDialog.Builder abDiscard = new AlertDialog.Builder(this);
+        abDiscard.setMessage(R.string.note_discard_changes_confirm);
+        abDiscard.setNegativeButton(R.string.no, null);
+        abDiscard.setPositiveButton(R.string.yes, (dialog, which) -> {
+            new Thread(() -> {
+                note = db.noteDao().getNote(note.noteId);
+                runOnUiThread(() -> {
+                    ab.setTitle(note.noteHead);
+                    binding.edtNoteBody.setText(note.noteBody);
+                    String lastModTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.lastModTime))
+                            + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
+                    binding.tvwNoteDateDataDisp.setText(getString(R.string.note_last_mod, lastModTimeFormat));
+                    updateNoteStyle();
+                    isChangeMade = false;
+                    Toast.makeText(getApplicationContext(), R.string.note_discard_changes_done, Toast.LENGTH_SHORT).show();
+                });
+            }).start();
+        });
+        adDiscard = abDiscard.create();
+
         updateNoteStyle();
 
         setDoubleTapListener();
@@ -377,6 +398,10 @@ public class NoteActivity extends AppCompatActivity {
                 } else {
                     shareAsText();
                 }
+                break;
+            case R.id.mnuNoteEditDiscard:
+                if (isChangeMade) adDiscard.show();
+                else Toast.makeText(this, R.string.note_discard_changes_no_need, Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

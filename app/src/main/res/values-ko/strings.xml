@@ -37,6 +37,10 @@
     <string name="note_menu_style_sansserif">고딕체</string>
     <string name="note_menu_style_serif">세리프체</string>
     <string name="note_menu_style_monospace">고정폭</string>
+    <string name="note_menu_discard_changes">변경 취소</string>
+    <string name="note_discard_changes_no_need">취소할 변경이 없습니다</string>
+    <string name="note_discard_changes_confirm">지금까지 작성한 내용 변경을 취소할까요?</string>
+    <string name="note_discard_changes_done">변경이 취소되었습니다</string>
     <string name="note_share_desc">공유 방식</string>
     <string name="note_share_text_title">텍스트로 공유</string>
     <string name="note_share_text_desc">메모 내용을 텍스트로 공유합니다.\n카톡, SNS 등으로 공유하는 데 적합합니다.</string>

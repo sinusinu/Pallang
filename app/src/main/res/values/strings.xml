@@ -36,6 +36,10 @@
     <string name="note_menu_style_sansserif">Sans-serif</string>
     <string name="note_menu_style_serif">Serif</string>
     <string name="note_menu_style_monospace">Monospace</string>
+    <string name="note_menu_discard_changes">Discard changes</string>
+    <string name="note_discard_changes_no_need">No changes has been made</string>
+    <string name="note_discard_changes_confirm">Discard currently made changes?</string>
+    <string name="note_discard_changes_done">Discarded changes</string>
     <string name="note_share_desc">Share Method</string>
     <string name="note_share_text_title">Share as text</string>
     <string name="note_share_text_desc">Send text only to other apps.\nGood for messaging or SNS.</string>
