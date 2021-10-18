@@ -340,69 +340,62 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                checkClose(true);
-                break;
-            case R.id.mnuNoteViewEdit:
-                Layout layout = binding.edtNoteBody.getLayout();
-                binding.edtNoteBody.setSelection(layout.getOffsetForHorizontal(layout.getLineForVertical(binding.svNoteScroller.getScrollY()), 0));
-                setEditMode(true);
-                break;
-            case R.id.mnuNoteEditSave:
-                if (isChangeMade) saveChanges();
-                setEditMode(false);
-                break;
-            case R.id.mnuNoteEditProps:
-                // populate props dialog
-                ((EditText)viewProps.findViewById(R.id.edtPropsTitle)).setText(note.noteHead);
-                ((CheckBox)viewProps.findViewById(R.id.cbxPropsPinned)).setChecked(note.isPinned);
-                ((TextView)viewProps.findViewById(R.id.tvwPropsSize)).setText(getString(R.string.prop_len_format,
-                        Util.getGraphemeLength(binding.edtNoteBody.getText().toString())));
-                String creationTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.createTime))
-                        + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.createTime));
-                ((TextView)viewProps.findViewById(R.id.tvwPropsCreation)).setText(creationTimeFormat);
-                String lastModTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.lastModTime))
-                        + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
-                ((TextView)viewProps.findViewById(R.id.tvwPropsLastMod)).setText(lastModTimeFormat);
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            checkClose(true);
+        } else if (itemId == R.id.mnuNoteViewEdit) {
+            Layout layout = binding.edtNoteBody.getLayout();
+            binding.edtNoteBody.setSelection(layout.getOffsetForHorizontal(layout.getLineForVertical(binding.svNoteScroller.getScrollY()), 0));
+            setEditMode(true);
+        } else if (itemId == R.id.mnuNoteEditSave) {
+            if (isChangeMade) saveChanges();
+            setEditMode(false);
+        } else if (itemId == R.id.mnuNoteEditProps) {
+            // populate props dialog
+            ((EditText) viewProps.findViewById(R.id.edtPropsTitle)).setText(note.noteHead);
+            ((CheckBox) viewProps.findViewById(R.id.cbxPropsPinned)).setChecked(note.isPinned);
+            ((TextView) viewProps.findViewById(R.id.tvwPropsSize)).setText(getString(R.string.prop_len_format,
+                    Util.getGraphemeLength(binding.edtNoteBody.getText().toString())));
+            String creationTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.createTime))
+                    + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.createTime));
+            ((TextView) viewProps.findViewById(R.id.tvwPropsCreation)).setText(creationTimeFormat);
+            String lastModTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.lastModTime))
+                    + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
+            ((TextView) viewProps.findViewById(R.id.tvwPropsLastMod)).setText(lastModTimeFormat);
 
-                adProps.show();
-                adProps.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((view) -> {
-                    if (((EditText)viewProps.findViewById(R.id.edtPropsTitle)).getText().toString().trim().length() == 0) {
-                        runOnUiThread(() -> Toast.makeText(getApplicationContext(), R.string.note_error_title_empty, Toast.LENGTH_SHORT).show());
-                        return;
-                    }
-                    new Thread(() -> {
-                        // if user changed the title, update last mod time (pinning shouldn't update that)
-                        if (!note.noteHead.equals(((EditText)viewProps.findViewById(R.id.edtPropsTitle)).getText().toString())) note.lastModTime = System.currentTimeMillis();
-                        note.noteHead = ((EditText)viewProps.findViewById(R.id.edtPropsTitle)).getText().toString();
-                        note.isPinned = ((CheckBox)viewProps.findViewById(R.id.cbxPropsPinned)).isChecked();
-                        db.noteDao().updateNote(note);
-                        runOnUiThread(() -> {
-                            ab.setTitle((isChangeMade ? "*" : "") + note.noteHead);
-                            adProps.dismiss();
-                        });
-                    }).start();
-                });
-                break;
-            case R.id.mnuNoteViewDelete:
-            case R.id.mnuNoteEditDelete:
-                adDelete.show();
-                break;
-            case R.id.mnuNoteEditStyle:
-                adStyle.show();
-                break;
-            case R.id.mnuNoteViewShare:
-                if (sp.getBoolean("enable_file_share", false)) {
-                    adShare.show();
-                } else {
-                    shareAsText();
+            adProps.show();
+            adProps.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((view) -> {
+                if (((EditText) viewProps.findViewById(R.id.edtPropsTitle)).getText().toString().trim().length() == 0) {
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), R.string.note_error_title_empty, Toast.LENGTH_SHORT).show());
+                    return;
                 }
-                break;
-            case R.id.mnuNoteEditDiscard:
-                if (isChangeMade) adDiscard.show();
-                else Toast.makeText(this, R.string.note_discard_changes_no_need, Toast.LENGTH_SHORT).show();
-                break;
+                new Thread(() -> {
+                    // if user changed the title, update last mod time (pinning shouldn't update that)
+                    if (!note.noteHead.equals(((EditText) viewProps.findViewById(R.id.edtPropsTitle)).getText().toString()))
+                        note.lastModTime = System.currentTimeMillis();
+                    note.noteHead = ((EditText) viewProps.findViewById(R.id.edtPropsTitle)).getText().toString();
+                    note.isPinned = ((CheckBox) viewProps.findViewById(R.id.cbxPropsPinned)).isChecked();
+                    db.noteDao().updateNote(note);
+                    runOnUiThread(() -> {
+                        ab.setTitle((isChangeMade ? "*" : "") + note.noteHead);
+                        adProps.dismiss();
+                    });
+                }).start();
+            });
+        } else if (itemId == R.id.mnuNoteViewDelete || itemId == R.id.mnuNoteEditDelete) {
+            adDelete.show();
+        } else if (itemId == R.id.mnuNoteEditStyle) {
+            adStyle.show();
+        } else if (itemId == R.id.mnuNoteViewShare) {
+            if (sp.getBoolean("enable_file_share", false)) {
+                adShare.show();
+            } else {
+                shareAsText();
+            }
+        } else if (itemId == R.id.mnuNoteEditDiscard) {
+            if (isChangeMade) adDiscard.show();
+            else
+                Toast.makeText(this, R.string.note_discard_changes_no_need, Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }

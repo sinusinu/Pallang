@@ -255,90 +255,89 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.mnuMainSelectDelete:
-                AlertDialog.Builder abDeleteConfirm = new AlertDialog.Builder(this);
-                abDeleteConfirm.setMessage(R.string.main_delete_confirm);
-                abDeleteConfirm.setNegativeButton(R.string.no, null);
-                abDeleteConfirm.setPositiveButton(R.string.yes, (dialog, which) -> {
-                    new Thread(() -> {
-                        for (PallangNote n : selectedNotes) {
-                            db.noteDao().deleteNote(n);
-                        }
-                        selectedNotes.clear();
-                        runOnUiThread(() -> {
-                            Toast.makeText(getApplicationContext(), getString(R.string.main_deleted), Toast.LENGTH_SHORT).show();
-                            ab.setTitle(getString(R.string.main_title));
-                            invalidateOptionsMenu();
-                            updateNotes();
-                        });
-                    }).start();
-                });
-                abDeleteConfirm.show();
-                break;
-            case R.id.mnuMainSettings:
-                startActivityForResult(new Intent(this, SettingsActivity.class), REQ_SETTINGS,
-                        ActivityOptionsCompat.makeCustomAnimation(MainActivity.this, R.anim.slide_in_right, R.anim.no_anim).toBundle());
-                break;
-            case R.id.mnuMainSort:
-                selectedSortMode = sp.getInt("sort_mode", 0);
-                AlertDialog.Builder abSort = new AlertDialog.Builder(this);
-                abSort.setTitle(R.string.main_menu_sort);
-                abSort.setSingleChoiceItems(new CharSequence[]{
-                        getString(R.string.main_sort_last_mod_time),
-                        getString(R.string.main_sort_create_time),
-                        getString(R.string.main_sort_title)
-                }, selectedSortMode, (dialog, which) -> {
-                    selectedSortMode = which;
-                });
-                abSort.setPositiveButton(R.string.main_sort_asc, (dialog, which) -> {
-                    sp.edit().putInt("sort_mode", selectedSortMode)
-                             .putBoolean("sort_asc", true)
-                             .apply();
-                    updateNotes();
-                });
-                abSort.setNegativeButton(R.string.main_sort_desc, (dialog, which) -> {
-                    sp.edit().putInt("sort_mode", selectedSortMode)
-                             .putBoolean("sort_asc", false)
-                             .apply();
-                    updateNotes();
-                });
-                abSort.show();
-                break;
-            case R.id.mnuMainSelectPin:
-                boolean isEverythingPinned = isEveryNoteSelectedIsPinned();
-                if (isEverythingPinned) {
-                    // unpin all
-                    new Thread(() -> {
-                        for (PallangNote n : selectedNotes) {
-                            n.isPinned = false;
-                            db.noteDao().updateNote(n);
-                        }
-                        selectedNotes.clear();
-                        runOnUiThread(() -> {
-                            Toast.makeText(getApplicationContext(), getString(R.string.main_unpinned), Toast.LENGTH_SHORT).show();
-                            ab.setTitle(getString(R.string.main_title));
-                            invalidateOptionsMenu();
-                            updateNotes();
-                        });
-                    }).start();
-                } else {
-                    // pin all
-                    new Thread(() -> {
-                        for (PallangNote n : selectedNotes) {
-                            n.isPinned = true;
-                            db.noteDao().updateNote(n);
-                        }
-                        selectedNotes.clear();
-                        runOnUiThread(() -> {
-                            Toast.makeText(getApplicationContext(), getString(R.string.main_pinned), Toast.LENGTH_SHORT).show();
-                            ab.setTitle(getString(R.string.main_title));
-                            invalidateOptionsMenu();
-                            updateNotes();
-                        });
-                    }).start();
-                }
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.mnuMainSelectDelete) {
+            AlertDialog.Builder abDeleteConfirm = new AlertDialog.Builder(this);
+            abDeleteConfirm.setMessage(R.string.main_delete_confirm);
+            abDeleteConfirm.setNegativeButton(R.string.no, null);
+            abDeleteConfirm.setPositiveButton(R.string.yes, (dialog, which) -> {
+                new Thread(() -> {
+                    for (PallangNote n : selectedNotes) {
+                        db.noteDao().deleteNote(n);
+                    }
+                    selectedNotes.clear();
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), getString(R.string.main_deleted), Toast.LENGTH_SHORT).show();
+                        ab.setTitle(getString(R.string.main_title));
+                        invalidateOptionsMenu();
+                        updateNotes();
+                    });
+                }).start();
+            });
+            abDeleteConfirm.show();
+        } else if (itemId == R.id.mnuMainSettings) {
+            startActivityForResult(
+                    new Intent(this, SettingsActivity.class),
+                    REQ_SETTINGS,
+                    ActivityOptionsCompat.makeCustomAnimation(MainActivity.this, R.anim.slide_in_right, R.anim.no_anim).toBundle()
+            );
+        } else if (itemId == R.id.mnuMainSort) {
+            selectedSortMode = sp.getInt("sort_mode", 0);
+            AlertDialog.Builder abSort = new AlertDialog.Builder(this);
+            abSort.setTitle(R.string.main_menu_sort);
+            abSort.setSingleChoiceItems(new CharSequence[]{
+                    getString(R.string.main_sort_last_mod_time),
+                    getString(R.string.main_sort_create_time),
+                    getString(R.string.main_sort_title)
+            }, selectedSortMode, (dialog, which) -> {
+                selectedSortMode = which;
+            });
+            abSort.setPositiveButton(R.string.main_sort_asc, (dialog, which) -> {
+                sp.edit().putInt("sort_mode", selectedSortMode)
+                        .putBoolean("sort_asc", true)
+                        .apply();
+                updateNotes();
+            });
+            abSort.setNegativeButton(R.string.main_sort_desc, (dialog, which) -> {
+                sp.edit().putInt("sort_mode", selectedSortMode)
+                        .putBoolean("sort_asc", false)
+                        .apply();
+                updateNotes();
+            });
+            abSort.show();
+        } else if (itemId == R.id.mnuMainSelectPin) {
+            boolean isEverythingPinned = isEveryNoteSelectedIsPinned();
+            if (isEverythingPinned) {
+                // unpin all
+                new Thread(() -> {
+                    for (PallangNote n : selectedNotes) {
+                        n.isPinned = false;
+                        db.noteDao().updateNote(n);
+                    }
+                    selectedNotes.clear();
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), getString(R.string.main_unpinned), Toast.LENGTH_SHORT).show();
+                        ab.setTitle(getString(R.string.main_title));
+                        invalidateOptionsMenu();
+                        updateNotes();
+                    });
+                }).start();
+            } else {
+                // pin all
+                new Thread(() -> {
+                    for (PallangNote n : selectedNotes) {
+                        n.isPinned = true;
+                        db.noteDao().updateNote(n);
+                    }
+                    selectedNotes.clear();
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), getString(R.string.main_pinned), Toast.LENGTH_SHORT).show();
+                        ab.setTitle(getString(R.string.main_title));
+                        invalidateOptionsMenu();
+                        updateNotes();
+                    });
+                }).start();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
