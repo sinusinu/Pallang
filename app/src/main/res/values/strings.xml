@@ -57,7 +57,7 @@
     <string name="prop_len">Length</string>
     <string name="prop_len_format">%d character(s)</string>
     <string name="prop_creation">Created at</string>
-    <string name="prop_last_mod">Last Modified</string>
+    <string name="prop_last_mod">Last Modified at</string>
     <string name="prop_create_note">Create</string>
     <string name="prop_save_changes">Save Changes</string>
     <string name="prop_updated">Property updated</string>
