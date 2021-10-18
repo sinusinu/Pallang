@@ -13,15 +13,19 @@
     </array>
 
     <array name="pref_text_size_labels">
+        <item>@string/settings_text_size_xsmall</item>
         <item>@string/settings_text_size_small</item>
         <item>@string/settings_text_size_medium</item>
         <item>@string/settings_text_size_large</item>
+        <item>@string/settings_text_size_xlarge</item>
     </array>
 
     <array name="pref_text_size_values">
+        <item>xsmall</item>
         <item>small</item>
         <item>medium</item>
         <item>large</item>
+        <item>xlarge</item>
     </array>
 
     <array name="pref_lf_type_labels">

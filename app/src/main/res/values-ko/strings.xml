@@ -72,9 +72,11 @@
     <string name="settings_theme_dark">다크</string>
     <string name="settings_text_size">글자 크기</string>
     <string name="settings_text_size_desc">메모를 표시할 글자의 크기를 설정합니다.</string>
+    <string name="settings_text_size_xsmall">매우 작게</string>
     <string name="settings_text_size_small">작게</string>
     <string name="settings_text_size_medium">보통</string>
     <string name="settings_text_size_large">크게</string>
+    <string name="settings_text_size_xlarge">매우 크게</string>
     <string name="settings_share_file_share">파일로 공유 사용</string>
     <string name="settings_share_file_share_desc">메모를 공유할 때 파일로 공유하는 옵션을 표시합니다.</string>
     <string name="settings_category_troubleshoot">문제 해결</string>
