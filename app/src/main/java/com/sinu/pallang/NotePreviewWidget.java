@@ -53,7 +53,7 @@ public class NotePreviewWidget extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.llNpwWidget, piOpenNote);
             views.setTextViewText(R.id.tvwNpwHead, note.noteHead);
             SpannableString spanBody = new SpannableString(note.noteBody);
-            String noteTypeface = note.noteStyle == 0 ? "sans-serif" : "serif";
+            String noteTypeface = note.noteStyle == 1 ? "serif" : "sans-serif";
             spanBody.setSpan(new TypefaceSpan(noteTypeface), 0, note.noteBody.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             views.setTextViewText(R.id.tvwNpwBody, spanBody);
         }
