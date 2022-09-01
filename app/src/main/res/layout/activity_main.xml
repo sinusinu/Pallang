@@ -40,7 +40,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tbrMainToolbar"
         app:layout_constraintVertical_bias="0.96"
-        app:srcCompat="@drawable/ic_add_24_black" />
+        app:srcCompat="@drawable/ic_add_24_black"
+        tools:ignore="ImageContrastCheck" />
 
     <TextView
         android:id="@+id/tvwMainNoNotes"
