@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.preference.PreferenceManager;
 
@@ -41,11 +40,13 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.Layout;
+import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.text.method.KeyListener;
+import android.text.style.CharacterStyle;
+import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -61,12 +62,25 @@ import android.widget.Toast;
 
 import com.sinu.pallang.databinding.ActivityNoteBinding;
 
+import org.commonmark.node.Link;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.Date;
+
+import io.noties.markwon.AbstractMarkwonPlugin;
+import io.noties.markwon.LinkResolver;
+import io.noties.markwon.Markwon;
+import io.noties.markwon.MarkwonConfiguration;
+import io.noties.markwon.MarkwonSpansFactory;
+import io.noties.markwon.SoftBreakAddsNewLinePlugin;
+import io.noties.markwon.SpanFactory;
+import io.noties.markwon.core.spans.LinkSpan;
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
+import io.noties.markwon.ext.tables.TablePlugin;
+import io.noties.markwon.ext.tasklist.TaskListPlugin;
 
 public class NoteActivity extends AppCompatActivity {
     ActivityNoteBinding binding;
@@ -94,6 +108,9 @@ public class NoteActivity extends AppCompatActivity {
 
     // variable for storing EditText's default KeyListener
     KeyListener kl;
+
+    // markwon instance (do not use directly; use getMarkwon instead)
+    Markwon markwon = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,8 +164,7 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (isInEditMode) {
-                    if (!isChangeMade) ab.setTitle("*" + ab.getTitle());
-                    isChangeMade = true;
+                    markChanges(true);
                 }
             }
         });
@@ -283,14 +299,6 @@ public class NoteActivity extends AppCompatActivity {
         binding.edtNoteBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeF);
 
         // display update has been moved to onResume
-        /*
-        ab.setTitle(note.noteHead);
-        if (openInEditMode) ab.setTitle("*" + ab.getTitle());
-        binding.edtNoteBody.setText(note.noteBody);
-        String lastModTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.lastModTime))
-                           + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
-        binding.tvwNoteDateDataDisp.setText(getString(R.string.note_last_mod, lastModTimeFormat));
-        */
     }
 
     // code detached from llShareAsText's click listener
@@ -310,8 +318,14 @@ public class NoteActivity extends AppCompatActivity {
         new Thread(() -> {
             note = db.noteDao().getNote(noteId);
             runOnUiThread(() -> {
-                ab.setTitle((isChangeMade ? "*" : "") + note.noteHead);
-                binding.edtNoteBody.setText(note.noteBody);
+                markChanges(isChangeMade);
+                if (note.enableMarkdown) {
+                    binding.edtNoteBody.setTextIsSelectable(false);
+                    getMarkwon().setMarkdown(binding.edtNoteBody, note.noteBody);
+                } else {
+                    binding.edtNoteBody.setTextIsSelectable(true);
+                    binding.edtNoteBody.setText(note.noteBody);
+                }
                 String lastModTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.lastModTime))
                         + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
                 binding.tvwNoteDateDataDisp.setText(getString(R.string.note_last_mod, lastModTimeFormat));
@@ -360,6 +374,7 @@ public class NoteActivity extends AppCompatActivity {
             // populate props dialog
             ((EditText) viewProps.findViewById(R.id.edtPropsTitle)).setText(note.noteHead);
             ((CheckBox) viewProps.findViewById(R.id.cbxPropsPinned)).setChecked(note.isPinned);
+            ((CheckBox) viewProps.findViewById(R.id.cbxPropsMarkdown)).setChecked(note.enableMarkdown);
             ((TextView) viewProps.findViewById(R.id.tvwPropsSize)).setText(getString(R.string.prop_len_format,
                     Util.getGraphemeLength(binding.edtNoteBody.getText().toString())));
             String creationTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.createTime))
@@ -381,9 +396,10 @@ public class NoteActivity extends AppCompatActivity {
                         note.lastModTime = System.currentTimeMillis();
                     note.noteHead = ((EditText) viewProps.findViewById(R.id.edtPropsTitle)).getText().toString();
                     note.isPinned = ((CheckBox) viewProps.findViewById(R.id.cbxPropsPinned)).isChecked();
+                    note.enableMarkdown = ((CheckBox) viewProps.findViewById(R.id.cbxPropsMarkdown)).isChecked();
                     db.noteDao().updateNote(note);
                     runOnUiThread(() -> {
-                        ab.setTitle((isChangeMade ? "*" : "") + note.noteHead);
+                        markChanges(isChangeMade);
                         adProps.dismiss();
                     });
                 }).start();
@@ -471,15 +487,35 @@ public class NoteActivity extends AppCompatActivity {
         binding.tvwNoteDateDataDisp.setText(getString(R.string.note_last_mod, lastModTimeFormat));
     }
 
+    private void markChanges(boolean isChanged) {
+        if (isChanged) {
+            ab.setTitle("*" + note.noteHead);
+            isChangeMade = true;
+        } else {
+            ab.setTitle(note.noteHead);
+            isChangeMade = false;
+        }
+    }
+
     private void setEditMode(boolean editMode) {
         isInEditMode = editMode;
         binding.edtNoteBody.setKeyListener(editMode ? kl : null);
-        binding.edtNoteBody.setTextIsSelectable(true);
         if (editMode) {
+            binding.edtNoteBody.setTextIsSelectable(true);
+            binding.edtNoteBody.setText(note.noteBody);
+            isChangeMade = false;
+            ab.setTitle(note.noteHead);
             binding.edtNoteBody.requestFocus();
             InputMethodManager imm = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.showSoftInput(binding.edtNoteBody, InputMethodManager.SHOW_IMPLICIT);
         } else {
+            if (note.enableMarkdown) {
+                binding.edtNoteBody.setTextIsSelectable(false);
+                getMarkwon().setMarkdown(binding.edtNoteBody, note.noteBody);
+            } else {
+                binding.edtNoteBody.setTextIsSelectable(true);
+                binding.edtNoteBody.setText(note.noteBody);
+            }
             InputMethodManager imm = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(binding.edtNoteBody.getWindowToken(), 0);
         }
@@ -512,5 +548,18 @@ public class NoteActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(android.R.anim.fade_in, R.anim.slide_out_right);
+    }
+
+    private Markwon getMarkwon() {
+        if (markwon == null) {
+            markwon = Markwon.builder(this)
+                    .usePlugin(SoftBreakAddsNewLinePlugin.create())
+                    .usePlugin(StrikethroughPlugin.create())
+                    .usePlugin(TablePlugin.create(this))
+                    .usePlugin(TaskListPlugin.create(this))
+                    .usePlugin(MarkdownDisableLinkPlugin.create(this))
+                    .build();
+        }
+        return markwon;
     }
 }

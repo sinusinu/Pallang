@@ -53,6 +53,7 @@
 
     <string name="prop_title">Title</string>
     <string name="prop_props_pinned">Pin to Top</string>
+    <string name="prop_props_markdown">Use Markdown</string>
     <string name="prop_info">Info</string>
     <string name="prop_len">Length</string>
     <string name="prop_len_format">%d character(s)</string>

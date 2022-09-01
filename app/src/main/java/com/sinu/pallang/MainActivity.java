@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 // insert new note into database
                 final int newNoteId = lastNoteId + 1;
                 final boolean isNewNotePinned = ((CheckBox)llProps.findViewById(R.id.cbxPropsPinned)).isChecked();
+                final boolean enableNewNoteMarkdown = ((CheckBox)llProps.findViewById(R.id.cbxPropsMarkdown)).isChecked();
 
                 Thread thrCreateNewNote = new Thread(() -> {
                     long currentTime = System.currentTimeMillis();
@@ -178,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     n.lastModTime = currentTime;
                     n.noteStyle = 0;
                     n.isPinned = isNewNotePinned;
+                    n.enableMarkdown = enableNewNoteMarkdown;
                     db.noteDao().insertNote(n);
                 });
 
