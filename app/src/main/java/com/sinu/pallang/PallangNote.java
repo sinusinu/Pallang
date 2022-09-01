@@ -52,6 +52,9 @@ public class PallangNote {
     @ColumnInfo(name = "is_pinned")
     public boolean isPinned;
 
+    @ColumnInfo(name = "enable_markdown")
+    public boolean enableMarkdown;
+
     /** Unused */
     @ColumnInfo(name = "is_recycled")
     public boolean isRecycled;

@@ -25,7 +25,7 @@ package com.sinu.pallang;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {PallangNote.class}, exportSchema = false, version = 2)
+@Database(entities = {PallangNote.class}, exportSchema = false, version = 3)
 public abstract class PallangNoteDatabase extends RoomDatabase {
     public abstract PallangNoteDao noteDao();
 }

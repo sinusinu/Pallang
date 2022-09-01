@@ -32,6 +32,7 @@ public class PallangNoteDBHolder {
     public static PallangNoteDatabase getDatabase(Context context) {
         if (db == null) db = Room.databaseBuilder(context, PallangNoteDatabase.class, "pallang-db")
                                  .addMigrations(PallangNoteDBMigration.MIGRATION_1_2)
+                                 .addMigrations(PallangNoteDBMigration.MIGRATION_2_3)
                                  .build();
         return db;
     }
