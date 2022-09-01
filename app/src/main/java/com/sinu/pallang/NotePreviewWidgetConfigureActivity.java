@@ -27,27 +27,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.sinu.pallang.databinding.NotePreviewWidgetConfigureBinding;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class NotePreviewWidgetConfigureActivity extends AppCompatActivity {
@@ -60,26 +53,96 @@ public class NotePreviewWidgetConfigureActivity extends AppCompatActivity {
     PallangNoteDatabase db;
 
     ArrayList<PallangNote> notes;
-    PallangNoteListForWidgetAdapter adapter;
+    WidgetNoteListAdapter adapter;
 
     int widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
+    int lastNoteId = -1;
+
     View.OnClickListener rvItemClickListener = (view) -> {
-        int i = binding.rvNpwNotes.getChildAdapterPosition(view);
+        int i = binding.rvNpwNotes.getChildAdapterPosition(view) - 1;
 
-        final Context context = NotePreviewWidgetConfigureActivity.this;
+        if (i == -1) {
+            final Context context = NotePreviewWidgetConfigureActivity.this;
 
-        saveNotePref(context, widgetId, notes.get(i));
+            Thread tFetchLastId = new Thread(() -> { lastNoteId = (notes.size() == 0) ? -1 : db.noteDao().getLastNoteId(); });
+            tFetchLastId.start();
+            try { tFetchLastId.join(); } catch (InterruptedException ignored) {}
 
-        // It is the responsibility of the configuration activity to update the app widget
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        NotePreviewWidget.updateAppWidget(context, appWidgetManager, widgetId);
+            View llProps = getLayoutInflater().inflate(R.layout.dialog_properties, null);
+            AlertDialog adProps;
 
-        // Make sure we pass back the original appWidgetId
-        Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-        setResult(RESULT_OK, resultValue);
-        finish();
+            AlertDialog.Builder abNewNoteProp = new AlertDialog.Builder(this);
+            abNewNoteProp.setTitle(R.string.main_new_note);
+            llProps.findViewById(R.id.llPropsInfo).setVisibility(View.GONE);
+            abNewNoteProp.setView(llProps);
+            abNewNoteProp.setPositiveButton(R.string.cancel, null);
+            // to override dialog closing behavior, OnClickListener for button must be set when dialog is shown
+            abNewNoteProp.setPositiveButton(R.string.prop_save_changes, null);
+            adProps = abNewNoteProp.create();
+
+            ((EditText)llProps.findViewById(R.id.edtPropsTitle)).setText(R.string.main_new_note_title);
+            ((CheckBox)llProps.findViewById(R.id.cbxPropsPinned)).setChecked(false);
+            adProps.show();
+            adProps.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.prop_create_note);
+            adProps.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((v) -> {
+                // stop if title is empty
+                final String newNoteTitle = ((EditText)llProps.findViewById(R.id.edtPropsTitle)).getText().toString();
+                if (newNoteTitle.trim().length() == 0) {
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), R.string.note_error_title_empty, Toast.LENGTH_SHORT).show());
+                    return;
+                }
+
+                // insert new note into database
+                final int newNoteId = lastNoteId + 1;
+                final boolean isNewNotePinned = ((CheckBox)llProps.findViewById(R.id.cbxPropsPinned)).isChecked();
+                final boolean enableNewNoteMarkdown = ((CheckBox)llProps.findViewById(R.id.cbxPropsMarkdown)).isChecked();
+
+                long currentTime = System.currentTimeMillis();
+                PallangNote n = new PallangNote();
+                n.noteId = newNoteId;
+                n.noteHead = newNoteTitle;
+                n.noteBody = "";
+                n.createTime = currentTime;
+                n.lastModTime = currentTime;
+                n.noteStyle = 0;
+                n.isPinned = isNewNotePinned;
+                n.enableMarkdown = enableNewNoteMarkdown;
+
+                Thread thrCreateNewNote = new Thread(() -> db.noteDao().insertNote(n));
+
+                thrCreateNewNote.start();
+                try { thrCreateNewNote.join(); } catch (InterruptedException ignored) {}
+
+                adProps.dismiss();
+
+                saveNotePref(context, widgetId, n);
+
+                // It is the responsibility of the configuration activity to update the app widget
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                NotePreviewWidget.updateAppWidget(context, appWidgetManager, widgetId);
+
+                // Make sure we pass back the original appWidgetId
+                Intent resultValue = new Intent();
+                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+                setResult(RESULT_OK, resultValue);
+                finish();
+            });
+        } else {
+            final Context context = NotePreviewWidgetConfigureActivity.this;
+
+            saveNotePref(context, widgetId, notes.get(i));
+
+            // It is the responsibility of the configuration activity to update the app widget
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            NotePreviewWidget.updateAppWidget(context, appWidgetManager, widgetId);
+
+            // Make sure we pass back the original appWidgetId
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+            setResult(RESULT_OK, resultValue);
+            finish();
+        }
     };
 
     public NotePreviewWidgetConfigureActivity() {
@@ -153,9 +216,13 @@ public class NotePreviewWidgetConfigureActivity extends AppCompatActivity {
         notes = new ArrayList<>();
 
         binding.rvNpwNotes.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new PallangNoteListForWidgetAdapter(notes);
+        adapter = new WidgetNoteListAdapter(this, notes, rvItemClickListener);
         binding.rvNpwNotes.setAdapter(adapter);
 
+        updateNotes();
+    }
+
+    private void updateNotes() {
         new Thread(() -> {
             notes.clear();
             List<PallangNote> dbNotes = db.noteDao().getNotes(sp.getInt("sort_mode", 0), sp.getBoolean("sort_asc", false));
@@ -169,47 +236,6 @@ public class NotePreviewWidgetConfigureActivity extends AppCompatActivity {
                 }
             });
         }).start();
-    }
-
-    private class PallangNoteListForWidgetAdapter extends RecyclerView.Adapter<PallangNoteListForWidgetAdapter.PallangNoteListForWidgetViewHolder> {
-        List<PallangNote> notes;
-
-        public class PallangNoteListForWidgetViewHolder extends RecyclerView.ViewHolder {
-            public LinearLayout v;
-
-            public PallangNoteListForWidgetViewHolder(LinearLayout v) {
-                super(v);
-                this.v = v;
-            }
-        }
-
-        public PallangNoteListForWidgetAdapter(List<PallangNote> notes) {
-            this.notes = notes;
-        }
-
-        @NonNull
-        @Override
-        public PallangNoteListForWidgetAdapter.PallangNoteListForWidgetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.list_note, parent, false);
-            v.setOnClickListener(rvItemClickListener);
-            return new PallangNoteListForWidgetAdapter.PallangNoteListForWidgetViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull PallangNoteListForWidgetAdapter.PallangNoteListForWidgetViewHolder holder, int position) {
-            ((TextView)holder.v.findViewById(R.id.tvwNoteListTitle)).setText(notes.get(position).noteHead);
-            long lastModTime = notes.get(position).lastModTime;
-            String lastModTimeFormat = DateFormat.getMediumDateFormat(NotePreviewWidgetConfigureActivity.this).format(new Date(notes.get(position).lastModTime));
-            ((TextView)holder.v.findViewById(R.id.tvwNoteListTime)).setText(lastModTimeFormat);
-            ((CheckBox)holder.v.findViewById(R.id.cbxNoteSelect)).setVisibility(View.GONE);
-            ((CheckBox)holder.v.findViewById(R.id.cbxNoteSelect)).setChecked(false);
-            ((ImageView)holder.v.findViewById(R.id.ivwNotePin)).setVisibility(notes.get(position).isPinned ? View.VISIBLE : View.GONE);
-        }
-
-        @Override
-        public int getItemCount() {
-            return notes.size();
-        }
     }
 }
 

@@ -165,19 +165,18 @@ public class MainActivity extends AppCompatActivity {
                 final boolean isNewNotePinned = ((CheckBox)llProps.findViewById(R.id.cbxPropsPinned)).isChecked();
                 final boolean enableNewNoteMarkdown = ((CheckBox)llProps.findViewById(R.id.cbxPropsMarkdown)).isChecked();
 
-                Thread thrCreateNewNote = new Thread(() -> {
-                    long currentTime = System.currentTimeMillis();
-                    PallangNote n = new PallangNote();
-                    n.noteId = newNoteId;
-                    n.noteHead = newNoteTitle;
-                    n.noteBody = "";
-                    n.createTime = currentTime;
-                    n.lastModTime = currentTime;
-                    n.noteStyle = 0;
-                    n.isPinned = isNewNotePinned;
-                    n.enableMarkdown = enableNewNoteMarkdown;
-                    db.noteDao().insertNote(n);
-                });
+                long currentTime = System.currentTimeMillis();
+                PallangNote n = new PallangNote();
+                n.noteId = newNoteId;
+                n.noteHead = newNoteTitle;
+                n.noteBody = "";
+                n.createTime = currentTime;
+                n.lastModTime = currentTime;
+                n.noteStyle = 0;
+                n.isPinned = isNewNotePinned;
+                n.enableMarkdown = enableNewNoteMarkdown;
+
+                Thread thrCreateNewNote = new Thread(() -> db.noteDao().insertNote(n));
 
                 thrCreateNewNote.start();
                 try {
