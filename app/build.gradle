@@ -7,8 +7,8 @@ android {
         applicationId "com.sinu.pallang"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 4
-        versionName "1.1.1"
+        versionCode 5
+        versionName "1.2"
         resConfigs 'en', 'ko'
     }
 
