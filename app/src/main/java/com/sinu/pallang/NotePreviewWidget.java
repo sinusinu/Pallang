@@ -55,7 +55,7 @@ public class NotePreviewWidget extends AppWidgetProvider {
             Intent openNote = new Intent(context, NoteActivity.class);
             openNote.putExtra("noteId", note.noteId);
             openNote.putExtra("openInEditMode", false);
-            PendingIntent piOpenNote = PendingIntent.getActivity(context, appWidgetId, openNote, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent piOpenNote = PendingIntent.getActivity(context, appWidgetId, openNote, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.llNpwWidget, piOpenNote);
             views.setTextViewText(R.id.tvwNpwHead, note.noteHead);
             if (note.enableMarkdown) {
@@ -79,7 +79,7 @@ public class NotePreviewWidget extends AppWidgetProvider {
         }
         Intent changeNote = new Intent(context, NotePreviewWidgetConfigureActivity.class);
         changeNote.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent piChangeNote = PendingIntent.getActivity(context, appWidgetId, changeNote, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent piChangeNote = PendingIntent.getActivity(context, appWidgetId, changeNote, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.btnNpwChangeNote, piChangeNote);
 
         String theme = PreferenceManager.getDefaultSharedPreferences(context).getString("theme", "light");
