@@ -11,20 +11,23 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".NoteButtonWidgetConfigureActivity"
-                  android:theme="@style/AppDialogTheme">
+                  android:theme="@style/AppDialogTheme"
+                  android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <activity android:name=".NotePreviewWidgetConfigureActivity"
-                  android:theme="@style/AppDialogTheme">
+                  android:theme="@style/AppDialogTheme"
+                  android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".FileOpenActivity">
+        <activity android:name=".FileOpenActivity"
+                  android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -35,12 +38,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsActivity"
+                  android:exported="false" />
 
         <activity android:name=".NoteActivity"
-                  android:windowSoftInputMode="adjustResize" />
+                  android:windowSoftInputMode="adjustResize"
+                  android:exported="false" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                  android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +56,8 @@
 
         <receiver
             android:name=".NoteButtonWidget"
-            android:label="@string/widget_button">
+            android:label="@string/widget_button"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -61,7 +68,8 @@
         </receiver>
 
         <receiver android:name=".NotePreviewWidget"
-            android:label="@string/widget_preview">
+            android:label="@string/widget_preview"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
