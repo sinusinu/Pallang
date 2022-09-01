@@ -17,21 +17,6 @@
         android:entryValues="@array/pref_text_size_values"
         android:summary="@string/settings_text_size_desc"
         android:title="@string/settings_text_size" />
-    <CheckBoxPreference
-        android:key="enable_file_share"
-        android:defaultValue="false"
-        android:title="@string/settings_share_file_share"
-        android:summary="@string/settings_share_file_share_desc" />
-
-    <PreferenceCategory android:title="@string/settings_category_troubleshoot"/>
-
-    <ListPreference
-        android:key="lf_type"
-        android:defaultValue="windows"
-        android:entries="@array/pref_lf_type_labels"
-        android:entryValues="@array/pref_lf_type_values"
-        android:summary="@string/settings_share_file_lf_type_desc"
-        android:title="@string/settings_share_file_lf_type" />
 
     <PreferenceCategory android:title="@string/settings_category_about"/>
 

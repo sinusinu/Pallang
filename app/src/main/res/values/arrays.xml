@@ -27,14 +27,4 @@
         <item>large</item>
         <item>xlarge</item>
     </array>
-
-    <array name="pref_lf_type_labels">
-        <item>@string/settings_share_file_lf_type_windows</item>
-        <item>@string/settings_share_file_lf_type_unix</item>
-    </array>
-
-    <array name="pref_lf_type_values">
-        <item>windows</item>
-        <item>unix</item>
-    </array>
 </resources>

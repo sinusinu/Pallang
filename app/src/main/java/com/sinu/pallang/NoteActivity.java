@@ -410,11 +410,7 @@ public class NoteActivity extends AppCompatActivity {
         } else if (itemId == R.id.mnuNoteEditStyle) {
             adStyle.show();
         } else if (itemId == R.id.mnuNoteViewShare) {
-            if (sp.getBoolean("enable_file_share", false)) {
-                adShare.show();
-            } else {
-                shareAsText();
-            }
+            shareAsText();
         } else if (itemId == R.id.mnuNoteEditDiscard) {
             if (isChangeMade) adDiscard.show();
             else
