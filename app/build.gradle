@@ -41,8 +41,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
     def room_version = "2.4.3"
     implementation "androidx.room:room-runtime:$room_version"
@@ -50,4 +48,8 @@ dependencies {
 
     def preference_version = "1.2.0"
     implementation "androidx.preference:preference:$preference_version"
+
+    // there will be a build error without these idk why
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 }
