@@ -93,8 +93,10 @@ public class MainActivity extends AppCompatActivity {
                 else selectedNotes.add(notes.get(i));
                 if (selectedNotes.size() == 0) {
                     ab.setTitle(getString(R.string.main_title));
+                    binding.fabMainNewNote.setVisibility(View.VISIBLE);
                 } else {
                     ab.setTitle(getString(R.string.main_select_title, selectedNotes.size()));
+                    binding.fabMainNewNote.setVisibility(View.INVISIBLE);
                 }
                 invalidateOptionsMenu();
                 adapter.notifyDataSetChanged();
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             if (selectedNotes.size() == 0) {
                 int i = binding.rvMainNotes.getChildAdapterPosition(view);
                 selectedNotes.add(notes.get(i));
+                binding.fabMainNewNote.setVisibility(View.INVISIBLE);
                 ab.setTitle(getString(R.string.main_select_title, selectedNotes.size()));
                 invalidateOptionsMenu();
                 adapter.notifyDataSetChanged();
@@ -145,13 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
         TooltipCompat.setTooltipText(binding.fabMainNewNote, getString(R.string.main_new_note));
         binding.fabMainNewNote.setOnClickListener(view -> {
-            if (selectedNotes.size() > 0) {
-                selectedNotes.clear();
-                ab.setTitle(getString(R.string.main_title));
-                invalidateOptionsMenu();
-                adapter.notifyDataSetChanged();
-            }
-
             ((EditText)llProps.findViewById(R.id.edtPropsTitle)).setText(R.string.main_new_note_title);
             ((CheckBox)llProps.findViewById(R.id.cbxPropsPinned)).setChecked(false);
             adProps.show();
@@ -229,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
         if (selectedNotes.size() > 0) {
             selectedNotes.clear();
             ab.setTitle(getString(R.string.main_title));
+            binding.fabMainNewNote.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
             adapter.notifyDataSetChanged();
         } else {
@@ -271,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Toast.makeText(getApplicationContext(), getString(R.string.main_deleted), Toast.LENGTH_SHORT).show();
                         ab.setTitle(getString(R.string.main_title));
+                        binding.fabMainNewNote.setVisibility(View.VISIBLE);
                         invalidateOptionsMenu();
                         updateNotes();
                     });
@@ -320,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Toast.makeText(getApplicationContext(), getString(R.string.main_unpinned), Toast.LENGTH_SHORT).show();
                         ab.setTitle(getString(R.string.main_title));
+                        binding.fabMainNewNote.setVisibility(View.VISIBLE);
                         invalidateOptionsMenu();
                         updateNotes();
                     });
@@ -335,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Toast.makeText(getApplicationContext(), getString(R.string.main_pinned), Toast.LENGTH_SHORT).show();
                         ab.setTitle(getString(R.string.main_title));
+                        binding.fabMainNewNote.setVisibility(View.VISIBLE);
                         invalidateOptionsMenu();
                         updateNotes();
                     });
