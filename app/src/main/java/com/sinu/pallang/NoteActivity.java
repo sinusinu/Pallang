@@ -400,6 +400,7 @@ public class NoteActivity extends AppCompatActivity {
                     db.noteDao().updateNote(note);
                     runOnUiThread(() -> {
                         markChanges(isChangeMade);
+                        if (!isInEditMode) setEditMode(false);  // if user changed markdown option, this will update that
                         adProps.dismiss();
                     });
                 }).start();
