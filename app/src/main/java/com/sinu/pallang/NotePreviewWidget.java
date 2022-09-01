@@ -29,18 +29,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.TypefaceSpan;
 import android.widget.RemoteViews;
 
 import androidx.preference.PreferenceManager;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.SoftBreakAddsNewLinePlugin;
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
+import io.noties.markwon.ext.tables.TablePlugin;
+import io.noties.markwon.ext.tasklist.TaskListPlugin;
+
 public class NotePreviewWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         PallangNote note = NotePreviewWidgetConfigureActivity.loadNotePref(context, appWidgetId);
 
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.note_preview_widget);
         if (note == null) {
             views.setTextViewText(R.id.tvwNpwHead, "");
@@ -52,10 +58,24 @@ public class NotePreviewWidget extends AppWidgetProvider {
             PendingIntent piOpenNote = PendingIntent.getActivity(context, appWidgetId, openNote, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.llNpwWidget, piOpenNote);
             views.setTextViewText(R.id.tvwNpwHead, note.noteHead);
-            SpannableString spanBody = new SpannableString(note.noteBody);
-            String noteTypeface = note.noteStyle == 1 ? "serif" : "sans-serif";
-            spanBody.setSpan(new TypefaceSpan(noteTypeface), 0, note.noteBody.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            views.setTextViewText(R.id.tvwNpwBody, spanBody);
+            if (note.enableMarkdown) {
+                Markwon markwon = Markwon.builder(context)
+                        .usePlugin(SoftBreakAddsNewLinePlugin.create())
+                        .usePlugin(StrikethroughPlugin.create())
+                        .usePlugin(MarkdownDisableLinkPlugin.create(context))
+                        .build();
+                Spanned spanBody = markwon.toMarkdown(note.noteBody);
+                SpannableStringBuilder ssb = new SpannableStringBuilder();
+                String noteTypeface = note.noteStyle == 1 ? "serif" : "sans-serif";
+                ssb.append(spanBody);
+                ssb.setSpan(new TypefaceSpan(noteTypeface), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                views.setTextViewText(R.id.tvwNpwBody, ssb);
+            } else {
+                SpannableString spanBody = new SpannableString(note.noteBody);
+                String noteTypeface = note.noteStyle == 1 ? "serif" : "sans-serif";
+                spanBody.setSpan(new TypefaceSpan(noteTypeface), 0, note.noteBody.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                views.setTextViewText(R.id.tvwNpwBody, spanBody);
+            }
         }
         Intent changeNote = new Intent(context, NotePreviewWidgetConfigureActivity.class);
         changeNote.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
