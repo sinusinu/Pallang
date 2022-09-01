@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sinu.pallang">
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,25 +17,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".NoteButtonWidgetConfigureActivity"
-                  android:theme="@style/AppDialogTheme"
-                  android:exported="false">
+        <activity
+            android:name=".NoteButtonWidgetConfigureActivity"
+            android:exported="false"
+            android:theme="@style/AppDialogTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".NotePreviewWidgetConfigureActivity"
-                  android:theme="@style/AppDialogTheme"
-                  android:exported="false">
+        <activity
+            android:name=".NotePreviewWidgetConfigureActivity"
+            android:exported="false"
+            android:theme="@style/AppDialogTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".FileOpenActivity"
-                  android:exported="true">
+        <activity
+            android:name=".FileOpenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -37,16 +45,16 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".SettingsActivity"
-                  android:exported="false" />
-
-        <activity android:name=".NoteActivity"
-                  android:windowSoftInputMode="adjustResize"
-                  android:exported="false" />
-
-        <activity android:name=".MainActivity"
-                  android:exported="true">
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NoteActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,10 +62,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".LicenseActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".NoteButtonWidget"
-            android:label="@string/widget_button"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/widget_button">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -66,10 +78,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/note_button_widget_info" />
         </receiver>
-
-        <receiver android:name=".NotePreviewWidget"
-            android:label="@string/widget_preview"
-            android:exported="true">
+        <receiver
+            android:name=".NotePreviewWidget"
+            android:exported="true"
+            android:label="@string/widget_preview">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -89,12 +101,5 @@
                 android:resource="@xml/filepaths" />
         </provider>
     </application>
-
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT" />
-            <data android:mimeType="text/plain" />
-        </intent>
-    </queries>
 
 </manifest>

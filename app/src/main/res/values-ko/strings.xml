@@ -86,6 +86,7 @@
     <string name="settings_share_file_lf_type_windows">Windows (CRLF) (추천)</string>
     <string name="settings_share_file_lf_type_unix">Unix (LF)</string>
     <string name="settings_category_about">정보</string>
+    <string name="settings_license">오픈 소스 라이선스</string>
     <string name="settings_about">팔랑 %s</string>
 
     <string name="share_done">공유된 텍스트를 메모로 저장하였습니다</string>

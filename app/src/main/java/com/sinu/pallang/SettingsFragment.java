@@ -22,6 +22,7 @@
 
 package com.sinu.pallang;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -44,6 +45,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.prefs, rootKey);
         getPreferenceScreen().findPreference("about").setTitle(getString(R.string.settings_about, BuildConfig.VERSION_NAME));
+        getPreferenceScreen().findPreference("license").setOnPreferenceClickListener((v) -> {
+            Intent intent = new Intent(getContext(), LicenseActivity.class);
+            startActivity(intent);
+            return true;
+        });
     }
 
     @Override
