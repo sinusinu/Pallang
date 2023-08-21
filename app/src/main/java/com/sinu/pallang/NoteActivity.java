@@ -265,7 +265,7 @@ public class NoteActivity extends AppCompatActivity {
                             + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
                     binding.tvwNoteDateDataDisp.setText(getString(R.string.note_last_mod, lastModTimeFormat));
                     updateNoteStyle();
-                    isChangeMade = false;
+                    markChanges(false);
                     Toast.makeText(getApplicationContext(), R.string.note_discard_changes_done, Toast.LENGTH_SHORT).show();
                 });
             }).start();
