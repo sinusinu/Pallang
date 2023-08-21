@@ -82,7 +82,7 @@ public class NotePreviewWidget extends AppWidgetProvider {
         PendingIntent piChangeNote = PendingIntent.getActivity(context, appWidgetId, changeNote, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.btnNpwChangeNote, piChangeNote);
 
-        String theme = PreferenceManager.getDefaultSharedPreferences(context).getString("theme", "light");
+        String theme = PreferenceManager.getDefaultSharedPreferences(context).getString("theme", "auto");
         if (theme.equals("light")) {
             views.setInt(R.id.llNpwWidget, "setBackgroundColor", context.getResources().getColor(R.color.colorWidgetBackgroundLight));
             views.setInt(R.id.tvwNpwHead, "setTextColor", context.getResources().getColor(R.color.colorWidgetTextLight));

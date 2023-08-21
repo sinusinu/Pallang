@@ -56,7 +56,7 @@ public class NoteButtonWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.tvwNbwTitle, note.noteHead);
         }
 
-        String theme = PreferenceManager.getDefaultSharedPreferences(context).getString("theme", "light");
+        String theme = PreferenceManager.getDefaultSharedPreferences(context).getString("theme", "auto");
         if (theme.equals("light")) {
             views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", context.getResources().getColor(R.color.colorWidgetBackgroundLight));
             views.setInt(R.id.tvwNbwTitle, "setTextColor", context.getResources().getColor(R.color.colorWidgetTextLight));
