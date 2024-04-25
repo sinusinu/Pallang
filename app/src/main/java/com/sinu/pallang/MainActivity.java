@@ -40,6 +40,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -207,8 +208,13 @@ public class MainActivity extends AppCompatActivity {
         adProps = abNewNoteProp.create();
 
         rUpdateNotes = () -> {
+            int sortMode = sp.getInt("sort_mode", 0);
+            boolean sortAsc = sp.getBoolean("sort_asc", false);
             notes.clear();
-            List<PallangNote> dbNotes = db.noteDao().getNotes(sp.getInt("sort_mode", 0), sp.getBoolean("sort_asc", false));
+            List<PallangNote> dbNotesPrePinSort = db.noteDao().getNotes(sortMode, sortAsc);
+            List<PallangNote> dbNotes = new ArrayList<>(dbNotesPrePinSort.size());
+            for (PallangNote n : dbNotesPrePinSort) if (n.isPinned) dbNotes.add(n);
+            for (PallangNote n : dbNotesPrePinSort) if (!n.isPinned) dbNotes.add(n);
             notes.addAll(dbNotes);
             lastNoteId = (notes.size() == 0) ? -1 : db.noteDao().getLastNoteId();
             runOnUiThread(() -> {

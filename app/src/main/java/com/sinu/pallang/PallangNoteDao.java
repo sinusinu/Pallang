@@ -32,29 +32,25 @@ import java.util.List;
 
 @Dao
 public interface PallangNoteDao {
-    // wow this is atrocious
-    @Query("SELECT * FROM " +
-               "(SELECT * FROM notes " +
-                   "ORDER BY " +
-                       "CASE :asc " +
-                           "WHEN 0 THEN " +
-                               "CASE :sortBy " +
-                                   "WHEN 0 THEN last_mod_time " +
-                                   "WHEN 1 THEN create_time " +
-                                   "WHEN 2 THEN note_head " +
-                               "END " +
-                       "END DESC, " +
-                       "CASE :asc " +
-                           "WHEN 1 THEN " +
-                               "CASE :sortBy " +
-                                   "WHEN 0 THEN last_mod_time " +
-                                   "WHEN 1 THEN create_time " +
-                                   "WHEN 2 THEN note_head " +
-                               "END " +
-                       "END ASC" +
-               ") " +
-               "ORDER BY " +
-                   "is_pinned DESC")
+    // wow this is still atrocious
+    @Query("SELECT * FROM notes " +
+           "ORDER BY " +
+               "CASE " +
+                   "WHEN :asc = 0 THEN " +
+                       "CASE :sortBy " +
+                           "WHEN 0 THEN last_mod_time " +
+                           "WHEN 1 THEN create_time " +
+                           "WHEN 2 THEN note_head " +
+                       "END " +
+                   "END DESC, " +
+               "CASE " +
+                   "WHEN :asc = 1 THEN " +
+                       "CASE :sortBy " +
+                           "WHEN 0 THEN last_mod_time " +
+                           "WHEN 1 THEN create_time " +
+                           "WHEN 2 THEN note_head " +
+                       "END " +
+                   "END ASC")
     List<PallangNote> getNotes(int sortBy, boolean asc);
 
     @Query("SELECT * FROM notes WHERE note_id = :noteId")
