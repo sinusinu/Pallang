@@ -3,7 +3,7 @@
 
     <string name="main_title">Pallang</string>
     <string name="main_no_notes">Press ＋ button to create a new note.</string>
-    <string name="main_new_note">Create new note</string>
+    <string name="main_new_note">New Note</string>
     <string name="main_new_note_title">Untitled</string>
     <string name="main_select_title">%d selected</string>
     <string name="main_sort_last_mod_time">Last modified time</string>
@@ -66,7 +66,7 @@
     <string name="settings_title">Settings</string>
     <string name="settings_category_general">General</string>
     <string name="settings_theme">Theme</string>
-    <string name="settings_theme_desc">Set the theme of Pallang.</string>
+    <string name="settings_theme_desc">Set the theme.</string>
     <string name="settings_theme_auto">System Default</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
@@ -99,7 +99,7 @@
     <string name="settings_category_about">About</string>
     <string name="settings_license">Open Source License</string>
     <string name="settings_about" translatable="false">Pallang %s</string>
-    <string name="settings_about_desc" translatable="false">© 2020-2024 sinu</string>
+    <string name="settings_about_desc" translatable="false">© 2020-2025 sinu</string>
 
     <string name="share_done">Saved text as a new note</string>
     <string name="share_error">An error occurred while sharing</string>
