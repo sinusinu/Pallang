@@ -292,6 +292,9 @@ public class NoteActivity extends AppCompatActivity {
         String textSize = sp.getString("text_size", "medium");
         float textSizeF;
         switch (textSize) {
+            case "xxsmall":
+                textSizeF = 14f;
+                break;
             case "xsmall":
                 textSizeF = 16f;
                 break;
@@ -307,6 +310,9 @@ public class NoteActivity extends AppCompatActivity {
                 break;
             case "xlarge":
                 textSizeF = 36f;
+                break;
+            case "xxlarge":
+                textSizeF = 38f;
                 break;
         }
         binding.edtNoteBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeF);

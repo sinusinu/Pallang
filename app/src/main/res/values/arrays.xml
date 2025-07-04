@@ -13,18 +13,22 @@
     </array>
 
     <array name="pref_text_size_labels">
+        <item>@string/settings_text_size_xxsmall</item>
         <item>@string/settings_text_size_xsmall</item>
         <item>@string/settings_text_size_small</item>
         <item>@string/settings_text_size_medium</item>
         <item>@string/settings_text_size_large</item>
         <item>@string/settings_text_size_xlarge</item>
+        <item>@string/settings_text_size_xxlarge</item>
     </array>
 
     <array name="pref_text_size_values">
+        <item>xxsmall</item>
         <item>xsmall</item>
         <item>small</item>
         <item>medium</item>
         <item>large</item>
         <item>xlarge</item>
+        <item>xxlarge</item>
     </array>
 </resources>
