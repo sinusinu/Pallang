@@ -23,6 +23,7 @@
 package com.sinu.pallang;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -311,6 +312,13 @@ public class NoteActivity extends AppCompatActivity {
         binding.edtNoteBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeF);
 
         // display update has been moved to onResume
+
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                checkClose(true);
+            }
+        });
     }
 
     // code detached from llShareAsText's click listener
@@ -546,11 +554,6 @@ public class NoteActivity extends AppCompatActivity {
         } else {
             if (closeAfter) finish();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        checkClose(true);
     }
 
     @Override

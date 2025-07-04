@@ -237,19 +237,21 @@ public class MainActivity extends AppCompatActivity {
             });
             isUpdatingNotes = false;
         };
-    }
 
-    @Override
-    public void onBackPressed() {
-        if (selectedNotes.size() > 0) {
-            selectedNotes.clear();
-            ab.setTitle(getString(R.string.main_title));
-            binding.fabMainNewNote.setVisibility(View.VISIBLE);
-            invalidateOptionsMenu();
-            adapter.notifyDataSetChanged();
-        } else {
-            super.onBackPressed();
-        }
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (selectedNotes.size() > 0) {
+                    selectedNotes.clear();
+                    ab.setTitle(getString(R.string.main_title));
+                    binding.fabMainNewNote.setVisibility(View.VISIBLE);
+                    invalidateOptionsMenu();
+                    adapter.notifyDataSetChanged();
+                } else {
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
