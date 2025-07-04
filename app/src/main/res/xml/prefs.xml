@@ -18,6 +18,20 @@
         android:summary="@string/settings_text_size_desc"
         android:title="@string/settings_text_size" />
 
+    <PreferenceCategory android:title="@string/settings_category_manage"/>
+
+    <Preference
+        android:key="import"
+        android:title="@string/settings_import"
+        android:summary="@string/settings_import_desc"
+        />
+
+    <Preference
+        android:key="export"
+        android:title="@string/settings_export"
+        android:summary="@string/settings_export_desc"
+        />
+
     <PreferenceCategory android:title="@string/settings_category_about"/>
 
     <Preference

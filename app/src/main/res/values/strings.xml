@@ -84,6 +84,18 @@
     <string name="settings_share_file_lf_type_desc">Select which newline type to use when sharing note as a file.</string>
     <string name="settings_share_file_lf_type_windows">Windows (CRLF) (Recommended)</string>
     <string name="settings_share_file_lf_type_unix">Unix (LF)</string>
+    <string name="settings_category_manage">Data Management</string>
+    <string name="settings_import">Import</string>
+    <string name="settings_import_desc">Import notes from a file. WARNING: This will remove all current notes!</string>
+    <string name="settings_import_dialog_title">Warning</string>
+    <string name="settings_import_dialog_desc">This action will remove all current notes. Are you sure?</string>
+    <string name="settings_import_error_io">Failed to import: Cannot open file.</string>
+    <string name="settings_import_error_parse">Failed to import: File is not a valid Pallang backup.</string>
+    <string name="settings_import_success">Import succeeded!</string>
+    <string name="settings_export">Export</string>
+    <string name="settings_export_desc">Export notes to a file.</string>
+    <string name="settings_export_error_generic">Failed to export.</string>
+    <string name="settings_export_success">Export succeeded!</string>
     <string name="settings_category_about">About</string>
     <string name="settings_license">Open Source License</string>
     <string name="settings_about" translatable="false">Pallang %s</string>

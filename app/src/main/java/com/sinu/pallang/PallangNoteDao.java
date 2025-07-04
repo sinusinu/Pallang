@@ -70,4 +70,7 @@ public interface PallangNoteDao {
 
     @Update
     void updateNote(PallangNote note);
+
+    @Query("DELETE FROM notes")
+    void clearNotes();
 }
