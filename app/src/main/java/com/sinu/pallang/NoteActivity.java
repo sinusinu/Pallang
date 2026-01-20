@@ -100,6 +100,8 @@ public class NoteActivity extends AppCompatActivity {
     boolean isInEditMode;
     boolean isChangeMade;
 
+    boolean isFromWidget;
+
     AlertDialog adProps;
     AlertDialog adStyle;
     AlertDialog adDelete;
@@ -138,6 +140,7 @@ public class NoteActivity extends AppCompatActivity {
 
         noteId = getIntent().getIntExtra("noteId", -1);
         openInEditMode = getIntent().getBooleanExtra("openInEditMode", false);
+        isFromWidget = getIntent().getBooleanExtra("fromWidget", false);
         shouldCheckNewNoteImmediateClose = openInEditMode;
         if (noteId == -1) { Toast.makeText(getApplicationContext(), getString(R.string.note_error_invalid_id), Toast.LENGTH_SHORT).show(); finish(); return; }
 
@@ -468,7 +471,8 @@ public class NoteActivity extends AppCompatActivity {
 
         ab.setTitle(note.noteHead);
 
-        checkClose(false);
+        if (isFromWidget) checkClose(true);
+        else checkClose(false);
         super.onPause();
     }
 
@@ -550,7 +554,7 @@ public class NoteActivity extends AppCompatActivity {
         if (isInEditMode) {
             if (shouldCheckNewNoteImmediateClose) {
                 if (binding.edtNoteBody.getText().length() == 0) {
-                    if (closeAfter) finish();
+                    if (closeAfter) { if (isFromWidget) finishAndRemoveTask(); else finish(); }
                     return;
                 }
                 shouldCheckNewNoteImmediateClose = false;
@@ -558,7 +562,7 @@ public class NoteActivity extends AppCompatActivity {
             if (isChangeMade) saveChanges();
             setEditMode(false);
         } else {
-            if (closeAfter) finish();
+            if (closeAfter) { if (isFromWidget) finishAndRemoveTask(); else finish(); }
         }
     }
 

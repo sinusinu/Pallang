@@ -53,8 +53,10 @@ public class NotePreviewWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.tvwNpwBody, context.getString(R.string.widget_note_not_found));
         } else {
             Intent openNote = new Intent(context, NoteActivity.class);
+            openNote.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             openNote.putExtra("noteId", note.noteId);
             openNote.putExtra("openInEditMode", false);
+            openNote.putExtra("fromWidget", true);
             PendingIntent piOpenNote = PendingIntent.getActivity(context, appWidgetId, openNote, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.llNpwWidget, piOpenNote);
             views.setTextViewText(R.id.tvwNpwHead, note.noteHead);

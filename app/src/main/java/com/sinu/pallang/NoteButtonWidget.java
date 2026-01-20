@@ -44,13 +44,16 @@ public class NoteButtonWidget extends AppWidgetProvider {
         if (note == null) {
             views.setTextViewText(R.id.tvwNbwTitle, context.getString(R.string.widget_note_not_found));
             Intent changeNote = new Intent(context, NoteButtonWidgetConfigureActivity.class);
+            changeNote.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             changeNote.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             PendingIntent piChangeNote = PendingIntent.getActivity(context, appWidgetId, changeNote, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.flNbwWidget, piChangeNote);
         } else {
             Intent openNote = new Intent(context, NoteActivity.class);
+            openNote.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             openNote.putExtra("noteId", note.noteId);
             openNote.putExtra("openInEditMode", false);
+            openNote.putExtra("fromWidget", true);
             PendingIntent piOpenNote = PendingIntent.getActivity(context, appWidgetId, openNote, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.flNbwWidget, piOpenNote);
             views.setTextViewText(R.id.tvwNbwTitle, note.noteHead);

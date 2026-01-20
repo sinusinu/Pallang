@@ -19,6 +19,9 @@
         <activity
             android:name=".NoteButtonWidgetConfigureActivity"
             android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity="com.sinu.pallang.task.configure.widget.button"
             android:theme="@style/AppDialogTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -27,6 +30,9 @@
         <activity
             android:name=".NotePreviewWidgetConfigureActivity"
             android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity="com.sinu.pallang.task.configure.widget.preview"
             android:theme="@style/AppDialogTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -50,6 +56,7 @@
         <activity
             android:name=".NoteActivity"
             android:exported="false"
+            android:taskAffinity="com.sinu.pallang.task.note"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
