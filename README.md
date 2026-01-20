@@ -2,9 +2,13 @@
 
 ![Screenshot](ghimgs/sc.png)
 
+Pallang is a note-taking app for Android.
+
+## Download
+
 [<img src="ghimgs/googleplay.png">](https://play.google.com/store/apps/details?id=com.sinu.pallang)
 
-Pallang is a note-taking app for Android.
+or you can grab the APK from [here](https://github.com/sinusinu/Pallang/releases/latest).
 
 ## Design Goals
 
