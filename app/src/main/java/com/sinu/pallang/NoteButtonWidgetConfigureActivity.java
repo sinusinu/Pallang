@@ -59,13 +59,13 @@ public class NoteButtonWidgetConfigureActivity extends AppCompatActivity {
 
     int lastNoteId = -1;
 
-    View.OnClickListener rvItemClickListener = (view) -> {
+    final View.OnClickListener rvItemClickListener = (view) -> {
         int i = binding.rvNbwNotes.getChildAdapterPosition(view) - 1;
 
         if (i == -1) {
             final Context context = NoteButtonWidgetConfigureActivity.this;
 
-            Thread tFetchLastId = new Thread(() -> { lastNoteId = (notes.size() == 0) ? -1 : db.noteDao().getLastNoteId(); });
+            Thread tFetchLastId = new Thread(() -> lastNoteId = (notes.isEmpty()) ? -1 : db.noteDao().getLastNoteId());
             tFetchLastId.start();
             try { tFetchLastId.join(); } catch (InterruptedException ignored) {}
 
@@ -88,7 +88,7 @@ public class NoteButtonWidgetConfigureActivity extends AppCompatActivity {
             adProps.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((v) -> {
                 // stop if title is empty
                 final String newNoteTitle = ((EditText)llProps.findViewById(R.id.edtPropsTitle)).getText().toString();
-                if (newNoteTitle.trim().length() == 0) {
+                if (newNoteTitle.trim().isEmpty()) {
                     runOnUiThread(() -> Toast.makeText(getApplicationContext(), R.string.note_error_title_empty, Toast.LENGTH_SHORT).show());
                     return;
                 }
@@ -171,9 +171,7 @@ public class NoteButtonWidgetConfigureActivity extends AppCompatActivity {
         thrDbCheck.start();
         try {
             thrDbCheck.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        } catch (InterruptedException ignored) {}
         return ret[0];
     }
 
@@ -228,7 +226,7 @@ public class NoteButtonWidgetConfigureActivity extends AppCompatActivity {
             List<PallangNote> dbNotes = db.noteDao().getNotes(sp.getInt("sort_mode", 0), sp.getBoolean("sort_asc", false));
             notes.addAll(dbNotes);
             runOnUiThread(() -> {
-                if (notes.size() == 0) {
+                if (notes.isEmpty()) {
                     Toast.makeText(NoteButtonWidgetConfigureActivity.this, R.string.note_error_note_not_found, Toast.LENGTH_SHORT).show();
                     finish();
                 } else {

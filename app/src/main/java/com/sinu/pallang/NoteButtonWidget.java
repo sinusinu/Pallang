@@ -28,10 +28,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.widget.RemoteViews;
 
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
@@ -61,21 +59,21 @@ public class NoteButtonWidget extends AppWidgetProvider {
 
         String theme = PreferenceManager.getDefaultSharedPreferences(context).getString("theme", "auto");
         if (theme.equals("light")) {
-            views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", context.getResources().getColor(R.color.colorWidgetBackgroundLight));
-            views.setInt(R.id.tvwNbwTitle, "setTextColor", context.getResources().getColor(R.color.colorWidgetTextLight));
+            views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", ContextCompat.getColor(context, R.color.colorWidgetBackgroundLight));
+            views.setInt(R.id.tvwNbwTitle, "setTextColor", ContextCompat.getColor(context, R.color.colorWidgetTextLight));
         } else if (theme.equals("dark")) {
-            views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", context.getResources().getColor(R.color.colorWidgetBackgroundDark));
-            views.setInt(R.id.tvwNbwTitle, "setTextColor", context.getResources().getColor(R.color.colorWidgetTextDark));
+            views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", ContextCompat.getColor(context, R.color.colorWidgetBackgroundDark));
+            views.setInt(R.id.tvwNbwTitle, "setTextColor", ContextCompat.getColor(context, R.color.colorWidgetTextDark));
         } else {
             switch (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
                 case Configuration.UI_MODE_NIGHT_NO:
                 case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                    views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", context.getResources().getColor(R.color.colorWidgetBackgroundLight));
-                    views.setInt(R.id.tvwNbwTitle, "setTextColor", context.getResources().getColor(R.color.colorWidgetTextLight));
+                    views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", ContextCompat.getColor(context, R.color.colorWidgetBackgroundLight));
+                    views.setInt(R.id.tvwNbwTitle, "setTextColor", ContextCompat.getColor(context, R.color.colorWidgetTextLight));
                     break;
                 case Configuration.UI_MODE_NIGHT_YES:
-                    views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", context.getResources().getColor(R.color.colorWidgetBackgroundDark));
-                    views.setInt(R.id.tvwNbwTitle, "setTextColor", context.getResources().getColor(R.color.colorWidgetTextDark));
+                    views.setInt(R.id.tvwNbwTitle, "setBackgroundColor", ContextCompat.getColor(context, R.color.colorWidgetBackgroundDark));
+                    views.setInt(R.id.tvwNbwTitle, "setTextColor", ContextCompat.getColor(context, R.color.colorWidgetTextDark));
                     break;
             }
         }

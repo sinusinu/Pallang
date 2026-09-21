@@ -22,6 +22,17 @@
 
 package com.sinu.pallang;
 
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.util.Base64;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,21 +44,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
 
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
-import android.util.Base64;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
-
 import com.sinu.pallang.databinding.ActivitySettingsBinding;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -83,9 +82,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.tbrSettingsToolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setHomeAsUpIndicator(R.drawable.ic_back_24_ctrlcolor);
-        ab.setTitle(R.string.settings_title);
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setHomeAsUpIndicator(R.drawable.ic_back_24_ctrlcolor);
+            ab.setTitle(R.string.settings_title);
+        }
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -133,7 +134,6 @@ public class SettingsActivity extends AppCompatActivity {
         startActivityForResult(intent, SAF_EXPORT);
     }
 
-    /** @noinspection CallToPrintStackTrace*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -142,6 +142,10 @@ public class SettingsActivity extends AppCompatActivity {
             if (data != null) {
                 uri = data.getData();
             } else {
+                Toast.makeText(this, R.string.settings_import_error_io, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (uri == null) {
                 Toast.makeText(this, R.string.settings_import_error_io, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -159,7 +163,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             } catch (IOException e) {
                 error = 1;
-                e.printStackTrace();
             }
 
             if (error == 0) {
@@ -181,10 +184,10 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     error = 2;
-                    e.printStackTrace();
                 }
             }
 
+            //noinspection ExtractMethodRecommender
             final int errorResult = error;
 
             var t = new Thread(() -> {
@@ -215,6 +218,10 @@ public class SettingsActivity extends AppCompatActivity {
                 return;
             }
             final Uri fUri = uri;
+            if (fUri == null) {
+                Toast.makeText(this, R.string.settings_export_error_generic, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             binding.clSettingsWait.setVisibility(View.VISIBLE);
 
@@ -237,27 +244,30 @@ public class SettingsActivity extends AppCompatActivity {
                                 .append("\"createTime\":").append(note.createTime).append(",")
                                 .append("\"lastModTime\":").append(note.lastModTime).append(",")
                                 .append("\"noteStyle\":").append(note.noteStyle).append(",")
-                                .append("\"isPinned\":").append(note.isPinned ? "true" : "false").append(",")
-                                .append("\"enableMarkdown\":").append(note.enableMarkdown ? "true" : "false");
+                                .append("\"isPinned\":").append(note.isPinned).append(",")
+                                .append("\"enableMarkdown\":").append(note.enableMarkdown);
                         sb.append("},");
                     }
                     sb.setLength(sb.length() - 1);
                     sb.append("]");
                 } catch (Exception e) {
                     error = true;
-                    e.printStackTrace();
+                    Log.e("Pallang", "Error constructing note export");
+                    Log.e("Pallang", e.toString());
                 }
 
                 if (!error) {
                     try {
                         ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(fUri, "w");
+                        if (pfd == null) throw new IOException("pfd is null");
                         FileOutputStream fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
                         fileOutputStream.write(sb.toString().getBytes());
                         fileOutputStream.close();
                         pfd.close();
                     } catch (IOException e) {
                         error = true;
-                        e.printStackTrace();
+                        Log.e("Pallang", "Error writing note export");
+                        Log.e("Pallang", e.toString());
                         return;
                     }
                 }
@@ -279,10 +289,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
         return false;
     }

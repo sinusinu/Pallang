@@ -22,31 +22,13 @@
 
 package com.sinu.pallang;
 
-import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.TooltipCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.ViewGroupCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,10 +41,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sinu.pallang.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -82,23 +79,23 @@ public class MainActivity extends AppCompatActivity {
     Runnable rUpdateNotes;
     boolean isUpdatingNotes = false;
 
-    View llProps;
     AlertDialog adProps;
 
     // user is selecting notes if this list is not empty
-    ArrayList<PallangNote> selectedNotes = new ArrayList<>();
+    final ArrayList<PallangNote> selectedNotes = new ArrayList<>();
 
     // 0 - by last modified date, 1 - by created date, 2 - by name
     int selectedSortMode;
 
     final View.OnClickListener rvItemClickListener = new View.OnClickListener() {
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onClick(View view) {
             int i = binding.rvMainNotes.getChildAdapterPosition(view);
-            if (selectedNotes.size() > 0) {
+            if (!selectedNotes.isEmpty()) {
                 if (selectedNotes.contains(notes.get(i))) selectedNotes.remove(notes.get(i));
                 else selectedNotes.add(notes.get(i));
-                if (selectedNotes.size() == 0) {
+                if (selectedNotes.isEmpty()) {
                     ab.setTitle(getString(R.string.main_title));
                     binding.fabMainNewNote.setVisibility(View.VISIBLE);
                 } else {
@@ -117,9 +114,10 @@ public class MainActivity extends AppCompatActivity {
     };
 
     final View.OnLongClickListener rvItemLongClickListener = new View.OnLongClickListener() {
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public boolean onLongClick(View view) {
-            if (selectedNotes.size() == 0) {
+            if (selectedNotes.isEmpty()) {
                 int i = binding.rvMainNotes.getChildAdapterPosition(view);
                 selectedNotes.add(notes.get(i));
                 binding.fabMainNewNote.setVisibility(View.INVISIBLE);
@@ -131,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             adProps.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((v) -> {
                 // stop if title is empty
                 final String newNoteTitle = ((EditText)llProps.findViewById(R.id.edtPropsTitle)).getText().toString();
-                if (newNoteTitle.trim().length() == 0) {
+                if (newNoteTitle.trim().isEmpty()) {
                     runOnUiThread(() -> Toast.makeText(getApplicationContext(), R.string.note_error_title_empty, Toast.LENGTH_SHORT).show());
                     return;
                 }
@@ -197,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     thrCreateNewNote.join();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                     Toast.makeText(getApplicationContext(), e.getClass().getSimpleName(), Toast.LENGTH_SHORT) .show();
                     return;
                 }
@@ -230,9 +228,9 @@ public class MainActivity extends AppCompatActivity {
             for (PallangNote n : dbNotesPrePinSort) if (n.isPinned) dbNotes.add(n);
             for (PallangNote n : dbNotesPrePinSort) if (!n.isPinned) dbNotes.add(n);
             notes.addAll(dbNotes);
-            lastNoteId = (notes.size() == 0) ? -1 : db.noteDao().getLastNoteId();
+            lastNoteId = (notes.isEmpty()) ? -1 : db.noteDao().getLastNoteId();
             runOnUiThread(() -> {
-                binding.tvwMainNoNotes.setVisibility((notes.size() == 0) ? View.VISIBLE : View.GONE);
+                binding.tvwMainNoNotes.setVisibility((notes.isEmpty()) ? View.VISIBLE : View.GONE);
                 adapter.notifyDataSetChanged();
             });
             isUpdatingNotes = false;
@@ -241,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (selectedNotes.size() > 0) {
+                if (!selectedNotes.isEmpty()) {
                     selectedNotes.clear();
                     ab.setTitle(getString(R.string.main_title));
                     binding.fabMainNewNote.setVisibility(View.VISIBLE);
@@ -256,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (selectedNotes.size() > 0) {
+        if (!selectedNotes.isEmpty()) {
             getMenuInflater().inflate(R.menu.menu_main_select, menu);
             boolean isEverythingPinned = isEveryNoteSelectedIsPinned();
             MenuItem mnuMainSelectPin = menu.findItem(R.id.mnuMainSelectPin);
@@ -280,21 +278,19 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog.Builder abDeleteConfirm = new AlertDialog.Builder(this);
             abDeleteConfirm.setMessage(R.string.main_delete_confirm);
             abDeleteConfirm.setNegativeButton(R.string.no, null);
-            abDeleteConfirm.setPositiveButton(R.string.yes, (dialog, which) -> {
-                new Thread(() -> {
-                    for (PallangNote n : selectedNotes) {
-                        db.noteDao().deleteNote(n);
-                    }
-                    selectedNotes.clear();
-                    runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), getString(R.string.main_deleted), Toast.LENGTH_SHORT).show();
-                        ab.setTitle(getString(R.string.main_title));
-                        binding.fabMainNewNote.setVisibility(View.VISIBLE);
-                        invalidateOptionsMenu();
-                        updateNotes();
-                    });
-                }).start();
-            });
+            abDeleteConfirm.setPositiveButton(R.string.yes, (dialog, which) -> new Thread(() -> {
+                for (PallangNote n : selectedNotes) {
+                    db.noteDao().deleteNote(n);
+                }
+                selectedNotes.clear();
+                runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(), getString(R.string.main_deleted), Toast.LENGTH_SHORT).show();
+                    ab.setTitle(getString(R.string.main_title));
+                    binding.fabMainNewNote.setVisibility(View.VISIBLE);
+                    invalidateOptionsMenu();
+                    updateNotes();
+                });
+            }).start());
             abDeleteConfirm.show();
         } else if (itemId == R.id.mnuMainSettings) {
             startActivityForResult(
@@ -310,9 +306,7 @@ public class MainActivity extends AppCompatActivity {
                     getString(R.string.main_sort_last_mod_time),
                     getString(R.string.main_sort_create_time),
                     getString(R.string.main_sort_title)
-            }, selectedSortMode, (dialog, which) -> {
-                selectedSortMode = which;
-            });
+            }, selectedSortMode, (dialog, which) -> selectedSortMode = which);
             abSort.setPositiveButton(R.string.main_sort_asc, (dialog, which) -> {
                 sp.edit().putInt("sort_mode", selectedSortMode)
                         .putBoolean("sort_asc", true)
@@ -390,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isEveryNoteSelectedIsPinned() {
-        if (selectedNotes.size() == 0) return false;
+        if (selectedNotes.isEmpty()) return false;
         boolean ret = true;
         for (PallangNote n : selectedNotes) {
             if (!n.isPinned) {
@@ -429,10 +423,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class PallangNoteListAdapter extends RecyclerView.Adapter<PallangNoteListAdapter.PallangNoteListViewHolder> {
-        List<PallangNote> notes;
+        final List<PallangNote> notes;
 
         public class PallangNoteListViewHolder extends RecyclerView.ViewHolder {
-            public LinearLayout v;
+            public final LinearLayout v;
 
             public PallangNoteListViewHolder(LinearLayout v) {
                 super(v);
@@ -456,9 +450,9 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull PallangNoteListViewHolder holder, int position) {
             ((TextView)holder.v.findViewById(R.id.tvwNoteListTitle)).setText(notes.get(position).noteHead);
             long lastModTime = notes.get(position).lastModTime;
-            String lastModTimeFormat = DateFormat.getMediumDateFormat(MainActivity.this).format(new Date(notes.get(position).lastModTime));
+            String lastModTimeFormat = DateFormat.getMediumDateFormat(MainActivity.this).format(new Date(lastModTime));
             ((TextView)holder.v.findViewById(R.id.tvwNoteListTime)).setText(lastModTimeFormat);
-            if (selectedNotes.size() > 0) {
+            if (!selectedNotes.isEmpty()) {
                 ((CheckBox)holder.v.findViewById(R.id.cbxNoteSelect)).setVisibility(View.VISIBLE);
                 ((CheckBox)holder.v.findViewById(R.id.cbxNoteSelect)).setChecked(selectedNotes.contains(notes.get(position)));
             } else {

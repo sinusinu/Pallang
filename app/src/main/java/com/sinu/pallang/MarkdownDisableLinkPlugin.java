@@ -27,6 +27,8 @@ import android.text.TextPaint;
 import android.text.style.CharacterStyle;
 import android.text.style.UpdateAppearance;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import org.commonmark.node.Link;
 import io.noties.markwon.AbstractMarkwonPlugin;
 import io.noties.markwon.MarkwonConfiguration;
@@ -34,7 +36,7 @@ import io.noties.markwon.MarkwonSpansFactory;
 import io.noties.markwon.SpanFactory;
 
 public class MarkdownDisableLinkPlugin extends AbstractMarkwonPlugin {
-    Context context;
+    final Context context;
 
     private MarkdownDisableLinkPlugin(Context context) {
         this.context = context;
@@ -63,7 +65,7 @@ public class MarkdownDisableLinkPlugin extends AbstractMarkwonPlugin {
     }
 
     public static class DisabledLinkSpan extends CharacterStyle implements UpdateAppearance {
-        Context context;
+        final Context context;
 
         public DisabledLinkSpan(Context context) {
             this.context = context;
@@ -72,7 +74,7 @@ public class MarkdownDisableLinkPlugin extends AbstractMarkwonPlugin {
         @Override
         public void updateDrawState(TextPaint tp) {
             tp.setUnderlineText(false);
-            tp.setColor(context.getResources().getColor(R.color.colorText));
+            tp.setColor(ContextCompat.getColor(context, R.color.colorText));
         }
     }
 }

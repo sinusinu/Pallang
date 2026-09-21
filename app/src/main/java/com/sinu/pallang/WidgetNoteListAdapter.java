@@ -39,12 +39,12 @@ import java.util.Date;
 import java.util.List;
 
 public class WidgetNoteListAdapter extends RecyclerView.Adapter<WidgetNoteListAdapter.PallangNoteListForWidgetViewHolder> {
-    Context context;
-    List<PallangNote> notes;
-    View.OnClickListener onClickListener;
+    final Context context;
+    final List<PallangNote> notes;
+    final View.OnClickListener onClickListener;
 
     public static class PallangNoteListForWidgetViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout v;
+        public final LinearLayout v;
 
         public PallangNoteListForWidgetViewHolder(LinearLayout v) {
             super(v);
@@ -69,18 +69,18 @@ public class WidgetNoteListAdapter extends RecyclerView.Adapter<WidgetNoteListAd
     @Override
     public void onBindViewHolder(@NonNull PallangNoteListForWidgetViewHolder holder, int position) {
         if (position == 0) {
-            ((TextView) holder.v.findViewById(R.id.tvwNoteListTitle)).setText(R.string.widget_new_note);
-            ((TextView) holder.v.findViewById(R.id.tvwNoteListTime)).setText("");
-            ((CheckBox) holder.v.findViewById(R.id.cbxNoteSelect)).setVisibility(View.GONE);
-            ((ImageView) holder.v.findViewById(R.id.ivwNotePin)).setVisibility(View.GONE);
+            ((TextView)holder.v.findViewById(R.id.tvwNoteListTitle)).setText(R.string.widget_new_note);
+            ((TextView)holder.v.findViewById(R.id.tvwNoteListTime)).setText("");
+            ((CheckBox)holder.v.findViewById(R.id.cbxNoteSelect)).setVisibility(View.GONE);
+            ((ImageView)holder.v.findViewById(R.id.ivwNotePin)).setVisibility(View.GONE);
         } else {
-            ((TextView) holder.v.findViewById(R.id.tvwNoteListTitle)).setText(notes.get(position - 1).noteHead);
+            ((TextView)holder.v.findViewById(R.id.tvwNoteListTitle)).setText(notes.get(position - 1).noteHead);
             long lastModTime = notes.get(position - 1).lastModTime;
-            String lastModTimeFormat = DateFormat.getMediumDateFormat(context).format(new Date(notes.get(position - 1).lastModTime));
-            ((TextView) holder.v.findViewById(R.id.tvwNoteListTime)).setText(lastModTimeFormat);
-            ((CheckBox) holder.v.findViewById(R.id.cbxNoteSelect)).setVisibility(View.GONE);
-            ((CheckBox) holder.v.findViewById(R.id.cbxNoteSelect)).setChecked(false);
-            ((ImageView) holder.v.findViewById(R.id.ivwNotePin)).setVisibility(notes.get(position - 1).isPinned ? View.VISIBLE : View.GONE);
+            String lastModTimeFormat = DateFormat.getMediumDateFormat(context).format(new Date(lastModTime));
+            ((TextView)holder.v.findViewById(R.id.tvwNoteListTime)).setText(lastModTimeFormat);
+            ((CheckBox)holder.v.findViewById(R.id.cbxNoteSelect)).setVisibility(View.GONE);
+            ((CheckBox)holder.v.findViewById(R.id.cbxNoteSelect)).setChecked(false);
+            ((ImageView)holder.v.findViewById(R.id.ivwNotePin)).setVisibility(notes.get(position - 1).isPinned ? View.VISIBLE : View.GONE);
         }
     }
 

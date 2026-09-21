@@ -22,18 +22,6 @@
 
 package com.sinu.pallang;
 
-import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.core.graphics.Insets;
-import androidx.core.view.GestureDetectorCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.preference.PreferenceManager;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,15 +31,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Layout;
-import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.text.method.KeyListener;
-import android.text.style.CharacterStyle;
-import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -65,9 +51,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sinu.pallang.databinding.ActivityNoteBinding;
+import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.PreferenceManager;
 
-import org.commonmark.node.Link;
+import com.sinu.pallang.databinding.ActivityNoteBinding;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,14 +70,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
-import io.noties.markwon.AbstractMarkwonPlugin;
-import io.noties.markwon.LinkResolver;
 import io.noties.markwon.Markwon;
-import io.noties.markwon.MarkwonConfiguration;
-import io.noties.markwon.MarkwonSpansFactory;
 import io.noties.markwon.SoftBreakAddsNewLinePlugin;
-import io.noties.markwon.SpanFactory;
-import io.noties.markwon.core.spans.LinkSpan;
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
 import io.noties.markwon.ext.tables.TablePlugin;
 import io.noties.markwon.ext.tasklist.TaskListPlugin;
@@ -148,14 +137,11 @@ public class NoteActivity extends AppCompatActivity {
         db = PallangNoteDBHolder.getDatabase(getApplicationContext());
 
         Log.d("Pallang", "Looking up for note " + noteId);
-        Thread thrGetNote = new Thread(() -> {
-            note = db.noteDao().getNote(noteId);
-        });
+        Thread thrGetNote = new Thread(() -> note = db.noteDao().getNote(noteId));
         thrGetNote.start();
         try {
             thrGetNote.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.note_error_note_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -206,34 +192,30 @@ public class NoteActivity extends AppCompatActivity {
         AlertDialog.Builder abDelete = new AlertDialog.Builder(this);
         abDelete.setMessage(R.string.note_delete_confirm);
         abDelete.setNegativeButton(R.string.no, null);
-        abDelete.setPositiveButton(R.string.yes, (dialog, which) -> {
-            new Thread(() -> {
-                db.noteDao().updateNote(note);
-                db.noteDao().deleteNote(note);
-                runOnUiThread(() -> {
-                    Toast.makeText(getApplicationContext(), R.string.note_deleted, Toast.LENGTH_SHORT).show();
-                    finish();
-                });
-            }).start();
-        });
+        abDelete.setPositiveButton(R.string.yes, (dialog, which) -> new Thread(() -> {
+            db.noteDao().updateNote(note);
+            db.noteDao().deleteNote(note);
+            runOnUiThread(() -> {
+                Toast.makeText(getApplicationContext(), R.string.note_deleted, Toast.LENGTH_SHORT).show();
+                finish();
+            });
+        }).start());
         adDelete = abDelete.create();
 
         viewShare = getLayoutInflater().inflate(R.layout.dialog_share, null);
-        viewShare.findViewById(R.id.llShareAsText).setOnClickListener((view) -> {
-            shareAsText();
-        });
+        viewShare.findViewById(R.id.llShareAsText).setOnClickListener((view) -> shareAsText());
         viewShare.findViewById(R.id.llShareAsFile).setOnClickListener((view) -> {
             adShare.dismiss();
             String fileName = note.noteHead.replaceAll("[\\\\/:*?\"<>|]", "_") + ".txt";
             String fileCont = note.noteBody;
 
             switch (sp.getString("lf_type", "windows")) {
+                case "unix":
+                    fileCont = fileCont.replace("\r\n", "\n");
+                    break;
                 case "windows":
                 default:
                     fileCont = fileCont.replace("\r\n", "\n").replace("\n", "\r\n");
-                    break;
-                case "unix":
-                    fileCont = fileCont.replace("\r\n", "\n");
                     break;
             }
 
@@ -248,7 +230,6 @@ public class NoteActivity extends AppCompatActivity {
                 pw.close();
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
                 Toast.makeText(this, R.string.note_error_share_file_fail, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -271,21 +252,19 @@ public class NoteActivity extends AppCompatActivity {
         AlertDialog.Builder abDiscard = new AlertDialog.Builder(this);
         abDiscard.setMessage(R.string.note_discard_changes_confirm);
         abDiscard.setNegativeButton(R.string.no, null);
-        abDiscard.setPositiveButton(R.string.yes, (dialog, which) -> {
-            new Thread(() -> {
-                note = db.noteDao().getNote(note.noteId);
-                runOnUiThread(() -> {
-                    ab.setTitle(note.noteHead);
-                    binding.edtNoteBody.setText(note.noteBody);
-                    String lastModTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.lastModTime))
-                            + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
-                    binding.tvwNoteDateDataDisp.setText(getString(R.string.note_last_mod, lastModTimeFormat));
-                    updateNoteStyle();
-                    markChanges(false);
-                    Toast.makeText(getApplicationContext(), R.string.note_discard_changes_done, Toast.LENGTH_SHORT).show();
-                });
-            }).start();
-        });
+        abDiscard.setPositiveButton(R.string.yes, (dialog, which) -> new Thread(() -> {
+            note = db.noteDao().getNote(note.noteId);
+            runOnUiThread(() -> {
+                ab.setTitle(note.noteHead);
+                binding.edtNoteBody.setText(note.noteBody);
+                String lastModTimeFormat = DateFormat.getLongDateFormat(NoteActivity.this).format(new Date(note.lastModTime))
+                        + " " + DateFormat.getTimeFormat(NoteActivity.this).format(new Date(note.lastModTime));
+                binding.tvwNoteDateDataDisp.setText(getString(R.string.note_last_mod, lastModTimeFormat));
+                updateNoteStyle();
+                markChanges(false);
+                Toast.makeText(getApplicationContext(), R.string.note_discard_changes_done, Toast.LENGTH_SHORT).show();
+            });
+        }).start());
         adDiscard = abDiscard.create();
 
         updateNoteStyle();
@@ -304,10 +283,6 @@ public class NoteActivity extends AppCompatActivity {
             case "small":
                 textSizeF = 20f;
                 break;
-            case "medium":
-            default:
-                textSizeF = 24f;
-                break;
             case "large":
                 textSizeF = 30f;
                 break;
@@ -316,6 +291,10 @@ public class NoteActivity extends AppCompatActivity {
                 break;
             case "xxlarge":
                 textSizeF = 38f;
+                break;
+            case "medium":
+            default:
+                textSizeF = 24f;
                 break;
         }
         binding.edtNoteBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeF);
@@ -366,7 +345,7 @@ public class NoteActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setDoubleTapListener() {
         binding.edtNoteBody.setOnTouchListener(new View.OnTouchListener() {
-            private GestureDetectorCompat gestureDetectorCompat = new GestureDetectorCompat(NoteActivity.this, new GestureDetector.SimpleOnGestureListener() {
+            private final GestureDetector gestureDetectorCompat = new GestureDetector(NoteActivity.this, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
                     if (!isInEditMode) {
@@ -415,7 +394,7 @@ public class NoteActivity extends AppCompatActivity {
 
             adProps.show();
             adProps.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((view) -> {
-                if (((EditText) viewProps.findViewById(R.id.edtPropsTitle)).getText().toString().trim().length() == 0) {
+                if (((EditText) viewProps.findViewById(R.id.edtPropsTitle)).getText().toString().trim().isEmpty()) {
                     runOnUiThread(() -> Toast.makeText(getApplicationContext(), R.string.note_error_title_empty, Toast.LENGTH_SHORT).show());
                     return;
                 }
@@ -471,8 +450,7 @@ public class NoteActivity extends AppCompatActivity {
 
         ab.setTitle(note.noteHead);
 
-        if (isFromWidget) checkClose(true);
-        else checkClose(false);
+        checkClose(isFromWidget);
         super.onPause();
     }
 
@@ -534,7 +512,11 @@ public class NoteActivity extends AppCompatActivity {
             ab.setTitle(note.noteHead);
             binding.edtNoteBody.requestFocus();
             InputMethodManager imm = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(binding.edtNoteBody, InputMethodManager.SHOW_IMPLICIT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN) {
+                imm.showSoftInput(binding.edtNoteBody, 0);
+            } else { //noinspection deprecation
+                imm.showSoftInput(binding.edtNoteBody, InputMethodManager.SHOW_IMPLICIT);
+            }
         } else {
             if (note.enableMarkdown) {
                 binding.edtNoteBody.setTextIsSelectable(false);
