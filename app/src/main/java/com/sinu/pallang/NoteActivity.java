@@ -275,26 +275,26 @@ public class NoteActivity extends AppCompatActivity {
         float textSizeF;
         switch (textSize) {
             case "xxsmall":
-                textSizeF = 14f;
+                textSizeF = 8f;
                 break;
             case "xsmall":
-                textSizeF = 16f;
+                textSizeF = 10f;
                 break;
             case "small":
-                textSizeF = 20f;
+                textSizeF = 14f;
                 break;
             case "large":
-                textSizeF = 30f;
+                textSizeF = 24f;
                 break;
             case "xlarge":
-                textSizeF = 36f;
+                textSizeF = 30f;
                 break;
             case "xxlarge":
-                textSizeF = 38f;
+                textSizeF = 34f;
                 break;
             case "medium":
             default:
-                textSizeF = 24f;
+                textSizeF = 18f;
                 break;
         }
         binding.edtNoteBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeF);
