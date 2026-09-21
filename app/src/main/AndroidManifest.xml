@@ -39,18 +39,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FileOpenActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
