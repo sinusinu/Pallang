@@ -22,6 +22,7 @@
 
 package com.sinu.pallang;
 
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -221,9 +222,13 @@ public class NoteButtonWidgetConfigureActivity extends AppCompatActivity {
     }
 
     private void updateNotes() {
+        @SuppressLint("NotifyDataSetChanged")
         Thread tUpdateNotes = new Thread(() -> {
             notes.clear();
-            List<PallangNote> dbNotes = db.noteDao().getNotes(sp.getInt("sort_mode", 0), sp.getBoolean("sort_asc", false));
+            List<PallangNote> dbNotesPrePinSort = db.noteDao().getNotes(sp.getInt("sort_mode", 0), sp.getBoolean("sort_asc", false));
+            List<PallangNote> dbNotes = new ArrayList<>(dbNotesPrePinSort.size());
+            for (PallangNote n : dbNotesPrePinSort) if (n.isPinned) dbNotes.add(n);
+            for (PallangNote n : dbNotesPrePinSort) if (!n.isPinned) dbNotes.add(n);
             notes.addAll(dbNotes);
             runOnUiThread(() -> {
                 if (notes.isEmpty()) {
